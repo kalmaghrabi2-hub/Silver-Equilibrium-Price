@@ -65,14 +65,18 @@
     <div class="row"><span>Walk-forward gate</span><b id="wf">—</b></div>
     <div class="row"><span>Out-of-sample weeks</span><b id="oos">—</b></div>
     <div class="row"><span>Walk-forward R²</span><b id="r2">—</b></div>
-    <div class="row"><span>Walk-forward MAPE</span><b id="mape">—</b></div>
-    <div class="row"><span>Walk-forward RMSE</span><b id="rmse">—</b></div>
+    <div class="row"><span>Model MAPE</span><b id="mape">—</b></div>
+    <div class="row"><span>Naive MAPE</span><b id="naiveMape">—</b></div>
+    <div class="row"><span>Model RMSE</span><b id="rmse">—</b></div>
+    <div class="row"><span>Naive RMSE</span><b id="naiveRmse">—</b></div>
+    <div class="row"><span>Skill vs naive MSE</span><b id="naiveSkill">—</b></div>
     <div class="row"><span>Direction accuracy</span><b id="direction">—</b></div>
+    <p class="note">بوابة النموذج لا تعتمد على R² وMAPE فقط. يجب كذلك أن يتفوق النموذج خارج العينة على معيار الاستمرارية البسيط: سعر الأسبوع القادم = سعر الأسبوع السابق. فشل هذا الاختبار يُبقي السعر المنشور PROVISIONAL حتى لو كانت بقية المقاييس مرتفعة.</p>
   </section>
 
   <section class="panel">
     <h2>حوكمة النشر</h2>
-    <p class="note">لا يتم تعويض البيانات الحرجة المفقودة ولا استخدام بيانات مستقبلية. Weekly Gate يجب أن ينجح خارج العينة، وPhysical Source Gate يجب أن يعتمد على أحدث snapshot رسمي مناسب للسنة الجارية. إذا تعطّل مدخل حرج تظهر النتيجة PROVISIONAL أو UNAVAILABLE بدل اختلاق قيمة.</p>
+    <p class="note">لا يتم تعويض البيانات الحرجة المفقودة ولا استخدام بيانات مستقبلية. Weekly Gate يجب أن ينجح خارج العينة ويتفوق على الـnaive benchmark، وPhysical Source Gate يجب أن يعتمد على أحدث snapshot رسمي مناسب للسنة الجارية. إذا تعطّل مدخل حرج تظهر النتيجة PROVISIONAL أو UNAVAILABLE بدل اختلاق قيمة.</p>
     <div class="row"><span>Model status</span><b id="status">—</b></div>
     <div class="row"><span>Data quality</span><b id="quality">—</b></div>
     <div class="row"><span>No-imputation</span><b class="green">ACTIVE</b></div>
