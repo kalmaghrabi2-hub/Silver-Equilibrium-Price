@@ -1,0 +1,56 @@
+{
+  "dataset": "World Silver Survey 2026 - Silver Supply and Demand",
+  "publisher": "The Silver Institute",
+  "research_provider": "Metals Focus",
+  "survey_year": 2026,
+  "verified_at_utc": "2026-09-14T11:30:00Z",
+  "source_url": "https://silverinstitute.org/wp-content/uploads/2026/04/World-Silver-Survey-2026.pdf",
+  "source_page_url": "https://silverinstitute.org/all-world-silver-surveys-2025/",
+  "units": "million troy ounces unless stated otherwise",
+  "actual": {
+    "year": 2025,
+    "mine_production_moz": 846.6,
+    "recycling_moz": 197.6,
+    "net_hedging_supply_moz": 44.7,
+    "official_sector_sales_moz": 1.5,
+    "total_supply_moz": 1090.4,
+    "industrial_demand_moz": 657.4,
+    "photography_moz": 24.2,
+    "jewelry_moz": 189.3,
+    "silverware_moz": 42.1,
+    "coin_net_bar_demand_moz": 217.7,
+    "total_demand_moz": 1130.6,
+    "market_balance_moz": -40.3,
+    "net_etp_investment_moz": 278.1,
+    "london_avg_price_usd_oz": 40.03
+  },
+  "forecast": {
+    "year": 2026,
+    "mine_production_moz": 844.1,
+    "recycling_moz": 211.3,
+    "net_hedging_supply_moz": 10.0,
+    "official_sector_sales_moz": 1.0,
+    "total_supply_moz": 1066.4,
+    "industrial_demand_moz": 639.6,
+    "photography_moz": 22.5,
+    "jewelry_moz": 159.4,
+    "silverware_moz": 33.5,
+    "coin_net_bar_demand_moz": 257.6,
+    "total_demand_moz": 1112.6,
+    "market_balance_moz": -46.3,
+    "net_etp_investment_moz": 30.0
+  },
+  "elasticities": {
+    "supply": 0.36,
+    "demand": -0.40,
+    "source": "U.S. Geological Survey / Shojaeddini et al. (2025)",
+    "source_url": "https://pubs.usgs.gov/publication/ofr20251047/full",
+    "note": "Silver elasticity values used by USGS: PES 0.36 and PED -0.40; static panel framework."
+  },
+  "physical_source_gate": "PASS",
+  "notes": [
+    "2026 values are forecast values from World Silver Survey 2026.",
+    "The physical layer changes only when a newer verified official survey/outlook replaces this snapshot.",
+    "No full copyrighted survey is republished; only the numerical fields required by the model are stored."
+  ]
+}
