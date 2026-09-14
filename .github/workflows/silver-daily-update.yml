@@ -1,0 +1,67 @@
+name: Silver Equilibrium Daily Update
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "silver/**"
+      - ".github/workflows/silver-daily-update.yml"
+  schedule:
+    - cron: "35 21 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: silver-equilibrium-update
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  update-silver:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Compile sources
+        run: python -m compileall -q silver/src
+
+      - name: Calibrate weekly ARX fair-value model
+        shell: bash
+        run: |
+          for attempt in 1 2 3; do
+            python silver/src/calibrate_silver_weekly_arx.py && break
+            if [ "$attempt" -eq 3 ]; then exit 1; fi
+            sleep 15
+          done
+
+      - name: Update latest silver equilibrium data
+        shell: bash
+        run: |
+          for attempt in 1 2 3; do
+            python silver/src/update_silver.py && break
+            if [ "$attempt" -eq 3 ]; then exit 1; fi
+            sleep 15
+          done
+
+      - name: Commit refreshed outputs
+        run: |
+          git config user.name "silver-equilibrium-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add docs/silver/data/weekly_calibration.json docs/silver/data/latest.json
+          if git diff --cached --quiet; then
+            echo "No output changes"
+          else
+            git commit -m "chore(silver): daily equilibrium refresh"
+            git pull --rebase origin main
+            git push origin main
+          fi
