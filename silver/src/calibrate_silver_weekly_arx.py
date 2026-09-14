@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""Weekly ARX fair-value model for silver.
+"""Benchmark-aware weekly silver fair-value calibration.
 
-Target: next-week log COMEX silver close (SI=F).
-Features available at t only: lagged silver, gold, USD index, 10Y yield,
-VIX and copper. Expanding one-step-ahead walk-forward; no look-ahead and
-no missing-value imputation. Publication also requires positive MSE skill
-against a persistence benchmark (next week = previous observed silver price).
+Forecast target: next observed weekly COMEX silver close (SI=F).
+Model family: ridge ARX on the prior week's silver level and macro factors.
+Governance: model hyperparameters and persistence-blend weight are selected on
+an explicit validation window; the most recent 260 weeks remain untouched for
+final out-of-sample evaluation. No imputation and no look-ahead.
 """
 from __future__ import annotations
 
@@ -22,14 +22,15 @@ OUT = ROOT / "docs/silver/data/weekly_calibration.json"
 TARGET = "SI=F"
 MACRO = ["GC=F", "DX-Y.NYB", "^TNX", "^VIX", "HG=F"]
 SERIES = ["LAG_SILVER_LOG"] + MACRO
-START = 946684800  # 2000-01-01 UTC
-RIDGE_LAMBDA = 3.0
+START = 946684800
 MIN_TRAIN = 156
-MIN_OOS = 260
+VALIDATION_WEEKS = 156
+FINAL_OOS_WEEKS = 260
+RIDGE_CANDIDATES = [0.5, 2.0, 10.0, 50.0]
+BLEND_WEIGHTS = [0.0, 0.25, 0.50, 0.75, 1.0]
 MIN_R2 = 0.60
-MAX_MAPE = 15.0
-MIN_SKILL_VS_NAIVE_MSE_PCT = 0.0
-UA = "Mozilla/5.0 SilverEquilibriumPrice/2.0"
+MAX_MAPE = 12.0
+UA = "Mozilla/5.0 SilverEquilibriumPrice/3.1"
 
 
 def chart(symbol: str):
@@ -45,30 +46,28 @@ def chart(symbol: str):
         payload = json.loads(resp.read().decode("utf-8"))
     result = ((payload.get("chart") or {}).get("result") or [None])[0]
     if not result:
-        raise RuntimeError(f"Yahoo returned no result for {symbol}")
-    timestamps = result.get("timestamp") or []
+        raise RuntimeError(f"Yahoo returned no data for {symbol}")
+    ts = result.get("timestamp") or []
     closes = (((result.get("indicators") or {}).get("quote") or [{}])[0].get("close") or [])
     out = {}
-    for ts, value in zip(timestamps, closes):
+    for t, value in zip(ts, closes):
         if value is None:
             continue
         value = float(value)
         if value > 0 and math.isfinite(value):
-            out[int(ts) // 604800] = value
-    if len(out) < 200:
-        raise RuntimeError(f"Insufficient Yahoo weekly data for {symbol}: {len(out)}")
+            out[int(t) // 604800] = value
     return out, url
 
 
-def solve(matrix, rhs):
-    n = len(rhs)
-    aug = [matrix[i][:] + [rhs[i]] for i in range(n)]
+def solve(a, b):
+    n = len(b)
+    aug = [a[i][:] + [b[i]] for i in range(n)]
     for col in range(n):
         pivot = max(range(col, n), key=lambda row: abs(aug[row][col]))
         aug[col], aug[pivot] = aug[pivot], aug[col]
         z = aug[col][col]
         if abs(z) < 1e-12:
-            raise RuntimeError("Singular matrix")
+            raise RuntimeError("singular matrix")
         aug[col] = [v / z for v in aug[col]]
         for row in range(n):
             if row == col:
@@ -78,7 +77,15 @@ def solve(matrix, rhs):
     return [aug[i][-1] for i in range(n)]
 
 
-def fit(x_rows, y, lam=RIDGE_LAMBDA):
+def design(rows):
+    cols = list(zip(*[r[2] for r in rows]))
+    means = [statistics.fmean(c) for c in cols]
+    sds = [statistics.pstdev(c) or 1.0 for c in cols]
+    x = [[1.0] + [(v - m) / s for v, m, s in zip(r[2], means, sds)] for r in rows]
+    return x, means, sds
+
+
+def fit(x_rows, y, lam):
     p = len(x_rows[0])
     a = [[0.0] * p for _ in range(p)]
     b = [0.0] * p
@@ -92,99 +99,132 @@ def fit(x_rows, y, lam=RIDGE_LAMBDA):
     return solve(a, b)
 
 
-def design(rows):
-    columns = list(zip(*[row[2] for row in rows]))
-    means = [statistics.fmean(col) for col in columns]
-    sds = [statistics.pstdev(col) or 1.0 for col in columns]
-    x = [[1.0] + [(v - m) / s for v, m, s in zip(row[2], means, sds)] for row in rows]
-    return x, means, sds
+def predict_one(train, row, lam):
+    x, means, sds = design(train)
+    beta = fit(x, [math.log(r[1]) for r in train], lam)
+    live_x = [1.0] + [(v - m) / s for v, m, s in zip(row[2], means, sds)]
+    return math.exp(sum(a * b for a, b in zip(live_x, beta)))
+
+
+def blended(raw, naive, weight):
+    return naive + weight * (raw - naive)
+
+
+def metric_block(pred, actual, naive):
+    mse = statistics.fmean((a - p) ** 2 for a, p in zip(actual, pred))
+    nmse = statistics.fmean((a - p) ** 2 for a, p in zip(actual, naive))
+    mape = 100.0 * statistics.fmean(abs((a - p) / a) for a, p in zip(actual, pred))
+    naive_mape = 100.0 * statistics.fmean(abs((a - p) / a) for a, p in zip(actual, naive))
+    mean_actual = statistics.fmean(actual)
+    denom = sum((a - mean_actual) ** 2 for a in actual)
+    r2 = 1.0 - sum((a - p) ** 2 for a, p in zip(actual, pred)) / denom if denom else 0.0
+    direction_hits = 0
+    direction_n = 0
+    for a, p, n in zip(actual, pred, naive):
+        am = a - n
+        pm = p - n
+        if am != 0:
+            direction_n += 1
+            direction_hits += int((am > 0) == (pm > 0))
+    direction = 100.0 * direction_hits / direction_n if direction_n else None
+    return {
+        "n": len(actual),
+        "r2": round(r2, 4),
+        "mape_pct": round(mape, 3),
+        "accuracy_pct": round(max(0.0, min(100.0, 100.0 - mape)), 3),
+        "rmse_usd_oz": round(math.sqrt(mse), 3),
+        "naive_mape_pct": round(naive_mape, 3),
+        "naive_accuracy_pct": round(max(0.0, min(100.0, 100.0 - naive_mape)), 3),
+        "naive_rmse_usd_oz": round(math.sqrt(nmse), 3),
+        "skill_vs_naive_mse_pct": round(100.0 * (1.0 - mse / nmse) if nmse > 0 else 0.0, 3),
+        "direction_accuracy_pct": None if direction is None else round(direction, 2),
+    }
 
 
 def main():
     silver, silver_url = chart(TARGET)
-    factors = {}
-    urls = {}
+    factors, urls = {}, {}
     for symbol in MACRO:
         factors[symbol], urls[symbol] = chart(symbol)
 
-    common_weeks = sorted(set(silver).intersection(*[set(factors[s]) for s in MACRO]))
-    raw = [(w, silver[w], [factors[s][w] for s in MACRO]) for w in common_weeks]
-
+    common = sorted(set(silver).intersection(*[set(factors[s]) for s in MACRO]))
+    raw = [(w, silver[w], [factors[s][w] for s in MACRO]) for w in common]
     rows = []
     for i in range(1, len(raw)):
-        prev_week, prev_silver, prev_factors = raw[i - 1]
+        prev_week, prev_silver, prev_macro = raw[i - 1]
         week, current_silver, _ = raw[i]
         if week - prev_week == 1:
-            rows.append((week, current_silver, [math.log(prev_silver)] + prev_factors))
+            rows.append((week, current_silver, [math.log(prev_silver)] + prev_macro))
 
-    if len(rows) < MIN_TRAIN + MIN_OOS:
-        raise RuntimeError(f"Insufficient complete weekly history: {len(rows)}")
+    required = MIN_TRAIN + VALIDATION_WEEKS + FINAL_OOS_WEEKS
+    if len(rows) < required:
+        raise RuntimeError(f"insufficient complete weekly history: {len(rows)} < {required}")
 
-    predictions = []
-    naive_predictions = []
-    actuals = []
-    dates = []
-    for i in range(MIN_TRAIN, len(rows)):
-        train = rows[:i]
-        x_train, means, sds = design(train)
-        beta = fit(x_train, [math.log(r[1]) for r in train])
-        live_x = [1.0] + [(v - m) / s for v, m, s in zip(rows[i][2], means, sds)]
-        predictions.append(math.exp(sum(a * b for a, b in zip(live_x, beta))))
-        naive_predictions.append(math.exp(rows[i][2][0]))
-        actuals.append(rows[i][1])
+    test_start = len(rows) - FINAL_OOS_WEEKS
+    val_start = test_start - VALIDATION_WEEKS
+    if val_start < MIN_TRAIN:
+        raise RuntimeError("validation window overlaps minimum training window")
+
+    cache = {}
+    for lam in RIDGE_CANDIDATES:
+        raw_pred = {}
+        for i in range(val_start, len(rows)):
+            raw_pred[i] = predict_one(rows[:i], rows[i], lam)
+        cache[lam] = raw_pred
+
+    candidates = []
+    for lam in RIDGE_CANDIDATES:
+        for weight in BLEND_WEIGHTS:
+            pred, actual, naive = [], [], []
+            for i in range(val_start, test_start):
+                anchor = math.exp(rows[i][2][0])
+                pred.append(blended(cache[lam][i], anchor, weight))
+                actual.append(rows[i][1])
+                naive.append(anchor)
+            m = metric_block(pred, actual, naive)
+            candidates.append({"ridge_lambda": lam, "blend_weight": weight, "validation": m})
+
+    candidates.sort(key=lambda c: (c["validation"]["rmse_usd_oz"], c["validation"]["mape_pct"], c["blend_weight"]))
+    selected = candidates[0]
+    lam = selected["ridge_lambda"]
+    weight = selected["blend_weight"]
+
+    pred, actual, naive, dates = [], [], [], []
+    for i in range(test_start, len(rows)):
+        anchor = math.exp(rows[i][2][0])
+        pred.append(blended(cache[lam][i], anchor, weight))
+        actual.append(rows[i][1])
+        naive.append(anchor)
         dates.append(datetime.fromtimestamp(rows[i][0] * 604800, tz=timezone.utc).date().isoformat())
-
-    x_all, means, sds = design(rows)
-    beta = fit(x_all, [math.log(r[1]) for r in rows])
-
-    avg = statistics.fmean(actuals)
-    total_ss = sum((a - avg) ** 2 for a in actuals)
-    model_sq_errors = [(a - p) ** 2 for a, p in zip(actuals, predictions)]
-    naive_sq_errors = [(a - p) ** 2 for a, p in zip(actuals, naive_predictions)]
-    model_mse = statistics.fmean(model_sq_errors)
-    naive_mse = statistics.fmean(naive_sq_errors)
-    r2 = 1.0 - sum(model_sq_errors) / total_ss
-    mape = 100.0 * statistics.fmean(abs((a - p) / a) for a, p in zip(actuals, predictions))
-    naive_mape = 100.0 * statistics.fmean(abs((a - p) / a) for a, p in zip(actuals, naive_predictions))
-    rmse = math.sqrt(model_mse)
-    naive_rmse = math.sqrt(naive_mse)
-    skill_vs_naive_mse = 100.0 * (1.0 - model_mse / naive_mse) if naive_mse > 0 else float("-inf")
-
-    direction_hits = 0
-    direction_n = 0
-    for actual, predicted, baseline in zip(actuals, predictions, naive_predictions):
-        actual_move = actual - baseline
-        predicted_move = predicted - baseline
-        if actual_move != 0:
-            direction_n += 1
-            direction_hits += int((actual_move > 0) == (predicted_move > 0))
-    direction_accuracy = 100.0 * direction_hits / direction_n if direction_n else None
-
-    passed = (
-        len(predictions) >= MIN_OOS
-        and r2 >= MIN_R2
-        and mape <= MAX_MAPE
-        and skill_vs_naive_mse > MIN_SKILL_VS_NAIVE_MSE_PCT
-        and mape < naive_mape
-    )
-    metrics = {
+    metrics = metric_block(pred, actual, naive)
+    metrics.update({
         "n_weeks_total": len(rows),
-        "walk_forward_n": len(predictions),
+        "walk_forward_n": len(pred),
         "walk_forward_start": dates[0],
         "walk_forward_end": dates[-1],
-        "r2": round(r2, 4),
-        "mape_pct": round(mape, 3),
-        "rmse_usd_oz": round(rmse, 3),
-        "naive_mape_pct": round(naive_mape, 3),
-        "naive_rmse_usd_oz": round(naive_rmse, 3),
-        "skill_vs_naive_mse_pct": round(skill_vs_naive_mse, 3),
-        "direction_accuracy_pct": None if direction_accuracy is None else round(direction_accuracy, 2),
-    }
+    })
+
+    x_all, means, sds = design(rows)
+    beta = fit(x_all, [math.log(r[1]) for r in rows], lam)
+    last_week, last_silver, last_macro = raw[-1]
+    live_values = [math.log(last_silver)] + last_macro
+    live_x = [1.0] + [(v - m) / s for v, m, s in zip(live_values, means, sds)]
+    raw_live = math.exp(sum(a * b for a, b in zip(live_x, beta)))
+    live_value = blended(raw_live, last_silver, weight)
+
+    basic_gate = metrics["r2"] >= MIN_R2 and metrics["mape_pct"] <= MAX_MAPE
+    benchmark_gate = (
+        weight > 0.0
+        and metrics["skill_vs_naive_mse_pct"] > 0.0
+        and metrics["mape_pct"] < metrics["naive_mape_pct"]
+    )
+    publication_ok = basic_gate and benchmark_gate
 
     output = {
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
-        "model": "silver-weekly-arx-ridge-v2",
+        "model": "silver-weekly-benchmark-aware-ridge-v3",
         "frequency": "weekly",
+        "forecast_horizon_weeks": 1,
         "target": TARGET,
         "target_source": silver_url,
         "series": SERIES,
@@ -192,19 +232,38 @@ def main():
         "beta": beta,
         "means": means,
         "sds": sds,
-        "ridge_lambda": RIDGE_LAMBDA,
+        "ridge_lambda": lam,
+        "blend_weight_vs_persistence": weight,
+        "selection": {
+            "protocol": "validation-only hyperparameter and persistence-blend selection; final 260 weeks untouched",
+            "validation_weeks": VALIDATION_WEEKS,
+            "final_oos_weeks": FINAL_OOS_WEEKS,
+            "ridge_candidates": RIDGE_CANDIDATES,
+            "blend_weights": BLEND_WEIGHTS,
+            "selected_validation_metrics": selected["validation"],
+        },
         "metrics": metrics,
-        "walk_forward_gate": "PASS" if passed else "FAIL",
-        "publication_status": "CALIBRATED" if passed else "PROVISIONAL",
+        "walk_forward_gate": "PASS" if basic_gate else "FAIL",
+        "benchmark_gate": "PASS" if benchmark_gate else "FAIL",
+        "publication_status": "CALIBRATED" if publication_ok else "PROVISIONAL",
+        "live": {
+            "as_of_week": datetime.fromtimestamp(last_week * 604800, tz=timezone.utc).date().isoformat(),
+            "anchor_usd_oz": round(last_silver, 4),
+            "raw_model_fair_value_usd_oz": round(raw_live, 4),
+            "fair_value_usd_oz": round(live_value, 4),
+            "predicted_return_pct": round((live_value / last_silver - 1.0) * 100.0, 3),
+        },
         "rules": {
             "min_training_weeks": MIN_TRAIN,
-            "min_oos_weeks": MIN_OOS,
+            "validation_weeks": VALIDATION_WEEKS,
+            "final_oos_weeks": FINAL_OOS_WEEKS,
             "max_mape_pct": MAX_MAPE,
             "min_r2": MIN_R2,
-            "min_skill_vs_naive_mse_pct": MIN_SKILL_VS_NAIVE_MSE_PCT,
             "must_beat_naive_mape": True,
+            "must_have_positive_skill_vs_naive_mse": True,
             "naive_benchmark": "persistence: next weekly close equals previous observed weekly close",
-            "lookahead": "none; lagged silver and predictors are from the prior observed week",
+            "accuracy_definition": "100 - final out-of-sample MAPE; descriptive only, not a probability",
+            "lookahead": "none; predictors and target anchor are from information available before the forecast week",
             "missing_data": "complete-case only; no imputation",
         },
     }
