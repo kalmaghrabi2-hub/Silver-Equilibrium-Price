@@ -6,7 +6,7 @@ const fmt = (value, digits = 2) => Number.isFinite(Number(value))
 const money = (value) => Number.isFinite(Number(value)) ? '$' + fmt(value, 2) + '/oz' : '—';
 const percent = (value) => Number.isFinite(Number(value)) ? fmt(value, 2) + '%' : '—';
 const moz = (value) => Number.isFinite(Number(value)) ? fmt(value, 1) + ' Moz' : '—';
-const gateClass = (value) => value === 'PASS' ? 'green' : ((value === 'FAIL' || value === 'STALE') ? 'red' : 'yellow');
+const gateClass = (value) => value === 'PASS' ? 'green' : ((value === 'FAIL' || value === 'STALE' || value === 'NOT_AVAILABLE') ? 'red' : 'yellow');
 
 fetch('./data/latest.json?ts=' + Date.now(), { cache: 'no-store' })
   .then((response) => response.json())
@@ -32,11 +32,15 @@ fetch('./data/latest.json?ts=' + Date.now(), { cache: 'no-store' })
       setText('weeklyP', money(model.weekly_fair_value_usd_oz));
 
       const physical = model.physical_overlay || {};
-      setText('physical', fmt(physical.multiplier, 5) + '×');
+      setText('physical', fmt(physical.diagnostic_multiplier ?? physical.multiplier, 5) + '×');
+      setText('physicalApplied', physical.applied_to_pstar ? 'YES' : 'NO · weight 0');
+      if (byId('physicalApplied')) byId('physicalApplied').className = physical.applied_to_pstar ? 'green' : 'yellow';
       setText('dsRatio', fmt(physical.demand_supply_ratio, 5));
       setText('eqExponent', fmt(physical.equilibrium_exponent, 6));
       setText('physicalGate', physical.physical_source_gate || '—');
       if (byId('physicalGate')) byId('physicalGate').className = gateClass(physical.physical_source_gate);
+      setText('physicalPriceGate', physical.physical_price_validation_gate || '—');
+      if (byId('physicalPriceGate')) byId('physicalPriceGate').className = gateClass(physical.physical_price_validation_gate);
       setText('guardrail', model.guardrail_active ? 'YES' : 'NO');
       setText('physicalVintage', (physical.snapshot_year || '—') + ' · ' + (physical.vintage_type || '—'));
       setText('supply', moz(physical.total_supply_moz));
@@ -63,17 +67,20 @@ fetch('./data/latest.json?ts=' + Date.now(), { cache: 'no-store' })
     const metrics = calibration.metrics || {};
     setText('wf', calibration.walk_forward_gate || 'PENDING');
     if (byId('wf')) byId('wf').className = gateClass(calibration.walk_forward_gate);
-    setText('oos', metrics.walk_forward_n ?? '—');
-    setText('r2', metrics.r2 ?? '—');
-    setText('mape', metrics.mape_pct == null ? '—' : fmt(metrics.mape_pct, 2) + '%');
-    setText('naiveMape', metrics.naive_mape_pct == null ? '—' : fmt(metrics.naive_mape_pct, 2) + '%');
+    setText('benchmarkGate', calibration.benchmark_gate || 'PENDING');
+    if (byId('benchmarkGate')) byId('benchmarkGate').className = gateClass(calibration.benchmark_gate);
+    setText('oos', metrics.walk_forward_n ?? metrics.n ?? '—');
+    setText('accuracy', metrics.accuracy_pct == null ? '—' : percent(metrics.accuracy_pct));
+    setText('r2', metrics.r2 == null ? '—' : fmt(metrics.r2, 4));
+    setText('mape', metrics.mape_pct == null ? '—' : percent(metrics.mape_pct));
+    setText('naiveMape', metrics.naive_mape_pct == null ? '—' : percent(metrics.naive_mape_pct));
     setText('rmse', metrics.rmse_usd_oz == null ? '—' : money(metrics.rmse_usd_oz));
     setText('naiveRmse', metrics.naive_rmse_usd_oz == null ? '—' : money(metrics.naive_rmse_usd_oz));
     setText('naiveSkill', metrics.skill_vs_naive_mse_pct == null ? '—' : percent(metrics.skill_vs_naive_mse_pct));
     if (byId('naiveSkill') && metrics.skill_vs_naive_mse_pct != null) byId('naiveSkill').className = Number(metrics.skill_vs_naive_mse_pct) > 0 ? 'green' : 'red';
     setText('direction', metrics.direction_accuracy_pct == null ? '—' : percent(metrics.direction_accuracy_pct));
 
-    if (byId('badge')) byId('badge').textContent = (data.model_status || 'PENDING') + ' · GOVERNANCE GATES ACTIVE';
+    if (byId('badge')) byId('badge').textContent = (data.model_status || 'PENDING') + ' · BENCHMARK-AWARE GOVERNANCE';
   })
   .catch((error) => {
     setText('quality', 'LOAD ERROR');
