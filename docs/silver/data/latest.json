@@ -1,0 +1,211 @@
+{
+  "as_of_date": "2026-09-14",
+  "generated_at_utc": "2026-09-14T11:30:30.807881+00:00",
+  "model_version": "silver-weekly-arx-physical-equilibrium-v1.0",
+  "market": {
+    "usd_oz": 63.5,
+    "as_of": "2026-09-14",
+    "freshness_status": "latest_daily_close",
+    "provider": "Yahoo COMEX Silver Futures SI=F",
+    "benchmark_type": "futures",
+    "source": "https://query1.finance.yahoo.com/v8/finance/chart/SI%3DF?period1=1787571030&period2=1789385430&interval=1d&events=history"
+  },
+  "macro": {
+    "GC=F": {
+      "series": "GC=F",
+      "date": "2026-09-14",
+      "value": 4336.0,
+      "source": "https://query1.finance.yahoo.com/v8/finance/chart/GC%3DF?period1=1787571030&period2=1789385430&interval=1d&events=history"
+    },
+    "DX-Y.NYB": {
+      "series": "DX-Y.NYB",
+      "date": "2026-09-14",
+      "value": 99.51300048828125,
+      "source": "https://query1.finance.yahoo.com/v8/finance/chart/DX-Y.NYB?period1=1787571030&period2=1789385430&interval=1d&events=history"
+    },
+    "^TNX": {
+      "series": "^TNX",
+      "date": "2026-09-11",
+      "value": 4.974999904632568,
+      "source": "https://query1.finance.yahoo.com/v8/finance/chart/%5ETNX?period1=1787571030&period2=1789385430&interval=1d&events=history"
+    },
+    "^VIX": {
+      "series": "^VIX",
+      "date": "2026-09-14",
+      "value": 17.549999237060547,
+      "source": "https://query1.finance.yahoo.com/v8/finance/chart/%5EVIX?period1=1787571030&period2=1789385430&interval=1d&events=history"
+    },
+    "HG=F": {
+      "series": "HG=F",
+      "date": "2026-09-14",
+      "value": 6.434000015258789,
+      "source": "https://query1.finance.yahoo.com/v8/finance/chart/HG%3DF?period1=1787571031&period2=1789385431&interval=1d&events=history"
+    }
+  },
+  "calibration": {
+    "generated_at_utc": "2026-09-14T11:30:30.732676+00:00",
+    "model": "silver-weekly-arx-ridge-v1",
+    "frequency": "weekly",
+    "target": "SI=F",
+    "target_source": "https://query1.finance.yahoo.com/v8/finance/chart/SI%3DF?period1=946684800&period2=1789385420&interval=1wk&events=history&includeAdjustedClose=true",
+    "series": [
+      "LAG_SILVER_LOG",
+      "GC=F",
+      "DX-Y.NYB",
+      "^TNX",
+      "^VIX",
+      "HG=F"
+    ],
+    "predictor_sources": {
+      "LAG_SILVER_LOG": "https://query1.finance.yahoo.com/v8/finance/chart/SI%3DF?period1=946684800&period2=1789385420&interval=1wk&events=history&includeAdjustedClose=true",
+      "GC=F": "https://query1.finance.yahoo.com/v8/finance/chart/GC%3DF?period1=946684800&period2=1789385421&interval=1wk&events=history&includeAdjustedClose=true",
+      "DX-Y.NYB": "https://query1.finance.yahoo.com/v8/finance/chart/DX-Y.NYB?period1=946684800&period2=1789385421&interval=1wk&events=history&includeAdjustedClose=true",
+      "^TNX": "https://query1.finance.yahoo.com/v8/finance/chart/%5ETNX?period1=946684800&period2=1789385421&interval=1wk&events=history&includeAdjustedClose=true",
+      "^VIX": "https://query1.finance.yahoo.com/v8/finance/chart/%5EVIX?period1=946684800&period2=1789385421&interval=1wk&events=history&includeAdjustedClose=true",
+      "HG=F": "https://query1.finance.yahoo.com/v8/finance/chart/HG%3DF?period1=946684800&period2=1789385421&interval=1wk&events=history&includeAdjustedClose=true"
+    },
+    "beta": [
+      2.760079216994955,
+      0.6217610234955482,
+      0.022100841894747338,
+      -0.006982341242435497,
+      -0.007813129837577513,
+      -0.0008609866992297653,
+      0.017693778786690904
+    ],
+    "means": [
+      2.7581961061951663,
+      1336.5134742972778,
+      92.67963185261205,
+      3.2682916016835,
+      19.535169356350345,
+      2.9255165673232746
+    ],
+    "sds": [
+      0.665147299305306,
+      895.1170463100235,
+      11.077462484796886,
+      1.21785748370481,
+      8.325246680226062,
+      1.2711027279986158
+    ],
+    "ridge_lambda": 3.0,
+    "metrics": {
+      "n_weeks_total": 1358,
+      "walk_forward_n": 1202,
+      "walk_forward_start": "2003-08-28",
+      "walk_forward_end": "2026-09-03",
+      "r2": 0.9832,
+      "mape_pct": 3.753,
+      "rmse_usd_oz": 1.657,
+      "direction_accuracy_pct": 50.67
+    },
+    "walk_forward_gate": "PASS",
+    "publication_status": "CALIBRATED",
+    "rules": {
+      "min_training_weeks": 156,
+      "min_oos_weeks": 260,
+      "max_mape_pct": 15.0,
+      "min_r2": 0.6,
+      "lookahead": "none; lagged silver and predictors are from the prior observed week",
+      "missing_data": "complete-case only; no imputation"
+    }
+  },
+  "fundamentals_reference": {
+    "dataset": "World Silver Survey 2026 - Silver Supply and Demand",
+    "publisher": "The Silver Institute",
+    "research_provider": "Metals Focus",
+    "survey_year": 2026,
+    "verified_at_utc": "2026-09-14T11:30:00Z",
+    "source_url": "https://silverinstitute.org/wp-content/uploads/2026/04/World-Silver-Survey-2026.pdf",
+    "source_page_url": "https://silverinstitute.org/all-world-silver-surveys-2025/",
+    "units": "million troy ounces unless stated otherwise",
+    "actual": {
+      "year": 2025,
+      "mine_production_moz": 846.6,
+      "recycling_moz": 197.6,
+      "net_hedging_supply_moz": 44.7,
+      "official_sector_sales_moz": 1.5,
+      "total_supply_moz": 1090.4,
+      "industrial_demand_moz": 657.4,
+      "photography_moz": 24.2,
+      "jewelry_moz": 189.3,
+      "silverware_moz": 42.1,
+      "coin_net_bar_demand_moz": 217.7,
+      "total_demand_moz": 1130.6,
+      "market_balance_moz": -40.3,
+      "net_etp_investment_moz": 278.1,
+      "london_avg_price_usd_oz": 40.03
+    },
+    "forecast": {
+      "year": 2026,
+      "mine_production_moz": 844.1,
+      "recycling_moz": 211.3,
+      "net_hedging_supply_moz": 10.0,
+      "official_sector_sales_moz": 1.0,
+      "total_supply_moz": 1066.4,
+      "industrial_demand_moz": 639.6,
+      "photography_moz": 22.5,
+      "jewelry_moz": 159.4,
+      "silverware_moz": 33.5,
+      "coin_net_bar_demand_moz": 257.6,
+      "total_demand_moz": 1112.6,
+      "market_balance_moz": -46.3,
+      "net_etp_investment_moz": 30.0
+    },
+    "elasticities": {
+      "supply": 0.36,
+      "demand": -0.4,
+      "source": "U.S. Geological Survey / Shojaeddini et al. (2025)",
+      "source_url": "https://pubs.usgs.gov/publication/ofr20251047/full",
+      "note": "Silver elasticity values used by USGS: PES 0.36 and PED -0.40; static panel framework."
+    },
+    "physical_source_gate": "PASS",
+    "notes": [
+      "2026 values are forecast values from World Silver Survey 2026.",
+      "The physical layer changes only when a newer verified official survey/outlook replaces this snapshot.",
+      "No full copyrighted survey is republished; only the numerical fields required by the model are stored."
+    ]
+  },
+  "model": {
+    "weekly_fair_value_usd_oz": 64.71,
+    "physical_overlay": {
+      "vintage_type": "FORECAST",
+      "snapshot_year": 2026,
+      "survey_year": 2026,
+      "total_supply_moz": 1066.4,
+      "total_demand_moz": 1112.6,
+      "market_balance_moz": -46.3,
+      "mine_production_moz": 844.1,
+      "recycling_moz": 211.3,
+      "industrial_demand_moz": 639.6,
+      "coin_net_bar_demand_moz": 257.6,
+      "net_etp_investment_moz": 30.0,
+      "demand_supply_ratio": 1.04332333,
+      "elasticity_supply": 0.36,
+      "elasticity_demand": -0.4,
+      "equilibrium_exponent": 1.31578947,
+      "raw_multiplier": 1.05739054,
+      "multiplier": 1.05739054,
+      "guardrail_active": false,
+      "physical_source_gate": "PASS",
+      "source": "https://silverinstitute.org/wp-content/uploads/2026/04/World-Silver-Survey-2026.pdf",
+      "elasticity_source": "https://pubs.usgs.gov/publication/ofr20251047/full"
+    },
+    "raw_combined_p_star_usd_oz": 68.4238,
+    "fundamental_p_star_usd_oz": 68.4238,
+    "market_vs_pstar_pct": -7.196,
+    "guardrail_active": false,
+    "status": "VALID",
+    "confidence": "HIGH",
+    "governance": {
+      "weekly_walk_forward": "PASS",
+      "physical_source_gate": "PASS",
+      "no_imputation": true,
+      "publication_gate": "VALID"
+    }
+  },
+  "model_status": "VALID",
+  "errors": [],
+  "data_quality": "OK"
+}
