@@ -66,7 +66,11 @@ fetch('./data/latest.json?ts=' + Date.now(), { cache: 'no-store' })
     setText('oos', metrics.walk_forward_n ?? '—');
     setText('r2', metrics.r2 ?? '—');
     setText('mape', metrics.mape_pct == null ? '—' : fmt(metrics.mape_pct, 2) + '%');
+    setText('naiveMape', metrics.naive_mape_pct == null ? '—' : fmt(metrics.naive_mape_pct, 2) + '%');
     setText('rmse', metrics.rmse_usd_oz == null ? '—' : money(metrics.rmse_usd_oz));
+    setText('naiveRmse', metrics.naive_rmse_usd_oz == null ? '—' : money(metrics.naive_rmse_usd_oz));
+    setText('naiveSkill', metrics.skill_vs_naive_mse_pct == null ? '—' : percent(metrics.skill_vs_naive_mse_pct));
+    if (byId('naiveSkill') && metrics.skill_vs_naive_mse_pct != null) byId('naiveSkill').className = Number(metrics.skill_vs_naive_mse_pct) > 0 ? 'green' : 'red';
     setText('direction', metrics.direction_accuracy_pct == null ? '—' : percent(metrics.direction_accuracy_pct));
 
     if (byId('badge')) byId('badge').textContent = (data.model_status || 'PENDING') + ' · GOVERNANCE GATES ACTIVE';
