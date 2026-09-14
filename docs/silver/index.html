@@ -9,9 +9,9 @@
 <body>
 <main>
   <header>
-    <div class="badge" id="badge">GOVERNANCE GATES ACTIVE</div>
+    <div class="badge" id="badge">BENCHMARK-AWARE GOVERNANCE ACTIVE</div>
     <h1>Silver Equilibrium Price</h1>
-    <p class="lead">السعر المتعادل الهيكلي للفضة مقابل سعر السوق، بنموذج أسبوعي خارج العينة يجمع العامل النقدي والعامل الصناعي، ثم يضيف طبقة توازن العرض والطلب باستخدام أحدث بيانات The Silver Institute / Metals Focus ومرونات منشورة من USGS.</p>
+    <p class="lead">السعر المتعادل للفضة باستخدام طبقة أسبوعية Benchmark‑Aware مختبرة خارج العينة. طبقة العرض والطلب المادي تُعرض كتشخيص مستقل ولا تغيّر السعر النهائي إلا بعد إثبات أثرها السعري تاريخيًا خارج العينة.</p>
     <p class="muted" id="updated">جاري تحميل آخر تحديث…</p>
   </header>
 
@@ -23,11 +23,13 @@
 
   <section class="panel">
     <h2>تفكيك السعر المتعادل</h2>
-    <div class="row"><span>Weekly ARX fair value</span><b id="weeklyP">—</b></div>
-    <div class="row"><span>Physical equilibrium multiplier</span><b id="physical">—</b></div>
+    <div class="row"><span>Weekly benchmark-aware fair value</span><b id="weeklyP">—</b></div>
+    <div class="row"><span>Physical diagnostic multiplier</span><b id="physical">—</b></div>
+    <div class="row"><span>Physical multiplier applied to P*</span><b id="physicalApplied">—</b></div>
     <div class="row"><span>Demand / Supply</span><b id="dsRatio">—</b></div>
     <div class="row"><span>Equilibrium exponent</span><b id="eqExponent">—</b></div>
     <div class="row"><span>Physical source gate</span><b id="physicalGate">—</b></div>
+    <div class="row"><span>Physical price-validation gate</span><b id="physicalPriceGate">—</b></div>
     <div class="row"><span>Guardrail active</span><b id="guardrail">—</b></div>
   </section>
 
@@ -41,7 +43,7 @@
   </section>
 
   <section class="panel">
-    <h2>العرض والطلب المادي</h2>
+    <h2>العرض والطلب المادي — تشخيص مستقل</h2>
     <div class="row"><span>سنة البيانات / النوع</span><b id="physicalVintage">—</b></div>
     <div class="row"><span>Total Supply</span><b id="supply">—</b></div>
     <div class="row"><span>Total Demand</span><b id="demand">—</b></div>
@@ -57,13 +59,15 @@
     <h2>مرونات التوازن</h2>
     <div class="row"><span>Price Elasticity of Supply εs</span><b id="es">—</b></div>
     <div class="row"><span>Price Elasticity of Demand εd</span><b id="ed">—</b></div>
-    <p class="note">المعادلة: <span dir="ltr">Physical Multiplier = (D / S)^(1 / (εs − εd))</span>. القيم الحالية للفضة: <span dir="ltr">εs = 0.36</span> و<span dir="ltr">εd = −0.40</span> من تقديرات USGS المنشورة في 2025.</p>
+    <p class="note">المعادلة الفيزيائية: <span dir="ltr">(D / S)^(1 / (εs − εd))</span>. تُستخدم حاليًا كإشارة تشخيصية فقط؛ وزنها في السعر النهائي يظل صفرًا إلى أن ينجح اختبار سعري تاريخي مستقل خارج العينة.</p>
   </section>
 
   <section class="panel">
-    <h2>اختبارات النموذج الأسبوعي</h2>
+    <h2>اختبارات الدقة — الطبقة الأسبوعية</h2>
     <div class="row"><span>Walk-forward gate</span><b id="wf">—</b></div>
-    <div class="row"><span>Out-of-sample weeks</span><b id="oos">—</b></div>
+    <div class="row"><span>Benchmark gate</span><b id="benchmarkGate">—</b></div>
+    <div class="row"><span>Final out-of-sample weeks</span><b id="oos">—</b></div>
+    <div class="row"><span>OOS accuracy (100 − MAPE)</span><b id="accuracy">—</b></div>
     <div class="row"><span>Walk-forward R²</span><b id="r2">—</b></div>
     <div class="row"><span>Model MAPE</span><b id="mape">—</b></div>
     <div class="row"><span>Naive MAPE</span><b id="naiveMape">—</b></div>
@@ -71,12 +75,12 @@
     <div class="row"><span>Naive RMSE</span><b id="naiveRmse">—</b></div>
     <div class="row"><span>Skill vs naive MSE</span><b id="naiveSkill">—</b></div>
     <div class="row"><span>Direction accuracy</span><b id="direction">—</b></div>
-    <p class="note">بوابة النموذج لا تعتمد على R² وMAPE فقط. يجب كذلك أن يتفوق النموذج خارج العينة على معيار الاستمرارية البسيط: سعر الأسبوع القادم = سعر الأسبوع السابق. فشل هذا الاختبار يُبقي السعر المنشور PROVISIONAL حتى لو كانت بقية المقاييس مرتفعة.</p>
+    <p class="note">نسبة الدقة المعروضة = <span dir="ltr">100 − MAPE</span> على نافذة الاختبار النهائية غير المستخدمة في اختيار النموذج. وهي مقياس خطأ تاريخي وليست احتمالًا أو ضمانًا. Benchmark Gate لا ينجح إلا إذا تفوق النموذج على معيار الاستمرارية البسيط خارج العينة.</p>
   </section>
 
   <section class="panel">
     <h2>حوكمة النشر</h2>
-    <p class="note">لا يتم تعويض البيانات الحرجة المفقودة ولا استخدام بيانات مستقبلية. Weekly Gate يجب أن ينجح خارج العينة ويتفوق على الـnaive benchmark، وPhysical Source Gate يجب أن يعتمد على أحدث snapshot رسمي مناسب للسنة الجارية. إذا تعطّل مدخل حرج تظهر النتيجة PROVISIONAL أو UNAVAILABLE بدل اختلاق قيمة.</p>
+    <p class="note">اختيار الإعدادات يتم في نافذة Validation منفصلة، ثم تُقاس النتيجة على Final OOS غير مستخدمة في الاختيار. أي طبقة تفشل Benchmark أو لا تملك اختبارًا سعريًا صالحًا تُعطى وزنًا صفريًا في P* بدل أن ترفع أو تخفض السعر دون دليل تاريخي.</p>
     <div class="row"><span>Model status</span><b id="status">—</b></div>
     <div class="row"><span>Data quality</span><b id="quality">—</b></div>
     <div class="row"><span>No-imputation</span><b class="green">ACTIVE</b></div>
