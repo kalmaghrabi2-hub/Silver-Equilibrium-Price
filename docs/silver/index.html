@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Silver Equilibrium Price</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+  <header>
+    <div class="badge" id="badge">GOVERNANCE GATES ACTIVE</div>
+    <h1>Silver Equilibrium Price</h1>
+    <p class="lead">السعر المتعادل الهيكلي للفضة مقابل سعر السوق، بنموذج أسبوعي خارج العينة يجمع العامل النقدي والعامل الصناعي، ثم يضيف طبقة توازن العرض والطلب باستخدام أحدث بيانات The Silver Institute / Metals Focus ومرونات منشورة من USGS.</p>
+    <p class="muted" id="updated">جاري تحميل آخر تحديث…</p>
+  </header>
+
+  <section class="grid cards">
+    <article class="card"><span>سعر السوق المرجعي</span><strong class="silver" id="spot">—</strong><small id="spotMeta">—</small></article>
+    <article class="card"><span>السعر المتعادل P*</span><strong class="green" id="pstar">—</strong><small id="pstarMeta">—</small></article>
+    <article class="card"><span>السوق مقابل P*</span><strong id="gap">—</strong><small id="gapMeta">—</small></article>
+  </section>
+
+  <section class="panel">
+    <h2>تفكيك السعر المتعادل</h2>
+    <div class="row"><span>Weekly ARX fair value</span><b id="weeklyP">—</b></div>
+    <div class="row"><span>Physical equilibrium multiplier</span><b id="physical">—</b></div>
+    <div class="row"><span>Demand / Supply</span><b id="dsRatio">—</b></div>
+    <div class="row"><span>Equilibrium exponent</span><b id="eqExponent">—</b></div>
+    <div class="row"><span>Physical source gate</span><b id="physicalGate">—</b></div>
+    <div class="row"><span>Guardrail active</span><b id="guardrail">—</b></div>
+  </section>
+
+  <section class="panel">
+    <h2>العوامل الأسبوعية</h2>
+    <div class="row"><span>Gold Futures GC=F</span><b id="gold">—</b></div>
+    <div class="row"><span>US Dollar Index</span><b id="usd">—</b></div>
+    <div class="row"><span>US 10Y Yield</span><b id="tnx">—</b></div>
+    <div class="row"><span>VIX</span><b id="vix">—</b></div>
+    <div class="row"><span>Copper Futures HG=F</span><b id="copper">—</b></div>
+  </section>
+
+  <section class="panel">
+    <h2>العرض والطلب المادي</h2>
+    <div class="row"><span>سنة البيانات / النوع</span><b id="physicalVintage">—</b></div>
+    <div class="row"><span>Total Supply</span><b id="supply">—</b></div>
+    <div class="row"><span>Total Demand</span><b id="demand">—</b></div>
+    <div class="row"><span>Market Balance</span><b id="balance">—</b></div>
+    <div class="row"><span>Mine Production</span><b id="mine">—</b></div>
+    <div class="row"><span>Recycling</span><b id="recycling">—</b></div>
+    <div class="row"><span>Industrial Demand</span><b id="industrial">—</b></div>
+    <div class="row"><span>Coin & Net Bar Demand</span><b id="coinbar">—</b></div>
+    <div class="row"><span>Net Investment in ETPs</span><b id="etp">—</b></div>
+  </section>
+
+  <section class="panel">
+    <h2>مرونات التوازن</h2>
+    <div class="row"><span>Price Elasticity of Supply εs</span><b id="es">—</b></div>
+    <div class="row"><span>Price Elasticity of Demand εd</span><b id="ed">—</b></div>
+    <p class="note">المعادلة: <span dir="ltr">Physical Multiplier = (D / S)^(1 / (εs − εd))</span>. القيم الحالية للفضة: <span dir="ltr">εs = 0.36</span> و<span dir="ltr">εd = −0.40</span> من تقديرات USGS المنشورة في 2025.</p>
+  </section>
+
+  <section class="panel">
+    <h2>اختبارات النموذج الأسبوعي</h2>
+    <div class="row"><span>Walk-forward gate</span><b id="wf">—</b></div>
+    <div class="row"><span>Out-of-sample weeks</span><b id="oos">—</b></div>
+    <div class="row"><span>Walk-forward R²</span><b id="r2">—</b></div>
+    <div class="row"><span>Walk-forward MAPE</span><b id="mape">—</b></div>
+    <div class="row"><span>Walk-forward RMSE</span><b id="rmse">—</b></div>
+    <div class="row"><span>Direction accuracy</span><b id="direction">—</b></div>
+  </section>
+
+  <section class="panel">
+    <h2>حوكمة النشر</h2>
+    <p class="note">لا يتم تعويض البيانات الحرجة المفقودة ولا استخدام بيانات مستقبلية. Weekly Gate يجب أن ينجح خارج العينة، وPhysical Source Gate يجب أن يعتمد على أحدث snapshot رسمي مناسب للسنة الجارية. إذا تعطّل مدخل حرج تظهر النتيجة PROVISIONAL أو UNAVAILABLE بدل اختلاق قيمة.</p>
+    <div class="row"><span>Model status</span><b id="status">—</b></div>
+    <div class="row"><span>Data quality</span><b id="quality">—</b></div>
+    <div class="row"><span>No-imputation</span><b class="green">ACTIVE</b></div>
+  </section>
+
+  <section class="panel">
+    <h2>المصادر</h2>
+    <p class="sources">The Silver Institute / Metals Focus — World Silver Survey 2026 · U.S. Geological Survey — silver price elasticities · Yahoo Finance Chart API — SI=F, GC=F, DX-Y.NYB, ^TNX, ^VIX, HG=F · Gold API XAG fallback. الموقع يعرض فقط القيم اللازمة للنموذج ولا يعيد نشر التقرير الكامل.</p>
+  </section>
+</main>
+<script src="app.js"></script>
+</body>
+</html>
