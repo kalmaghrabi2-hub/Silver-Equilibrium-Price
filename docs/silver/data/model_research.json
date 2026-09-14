@@ -1,0 +1,323 @@
+{
+  "generated_at_utc": "2026-09-14T11:48:19.022311+00:00",
+  "protocol": "fixed candidate family; validation-only selection; untouched final OOS",
+  "source_urls": {
+    "SI=F": "https://query1.finance.yahoo.com/v8/finance/chart/SI%3DF?period1=946684800&period2=1789386421&interval=1wk&events=history&includeAdjustedClose=true",
+    "GC=F": "https://query1.finance.yahoo.com/v8/finance/chart/GC%3DF?period1=946684800&period2=1789386422&interval=1wk&events=history&includeAdjustedClose=true",
+    "HG=F": "https://query1.finance.yahoo.com/v8/finance/chart/HG%3DF?period1=946684800&period2=1789386422&interval=1wk&events=history&includeAdjustedClose=true",
+    "DX-Y.NYB": "https://query1.finance.yahoo.com/v8/finance/chart/DX-Y.NYB?period1=946684800&period2=1789386422&interval=1wk&events=history&includeAdjustedClose=true",
+    "^TNX": "https://query1.finance.yahoo.com/v8/finance/chart/%5ETNX?period1=946684800&period2=1789386423&interval=1wk&events=history&includeAdjustedClose=true",
+    "^VIX": "https://query1.finance.yahoo.com/v8/finance/chart/%5EVIX?period1=946684800&period2=1789386423&interval=1wk&events=history&includeAdjustedClose=true"
+  },
+  "candidate_count": 60,
+  "selection_windows": {
+    "initial_train_samples": 260,
+    "validation_samples": 156,
+    "final_oos_start_index": 416
+  },
+  "selected": {
+    "horizon_weeks": 13,
+    "feature_set": "FULL",
+    "features": [
+      "silver_ret_1",
+      "silver_mom_4",
+      "silver_mom_12",
+      "gold_ret_1",
+      "gold_mom_4",
+      "gold_mom_12",
+      "copper_ret_1",
+      "copper_mom_4",
+      "dxy_ret_1",
+      "dxy_mom_4",
+      "tnx_change_1",
+      "tnx_change_4",
+      "vix_ret_1",
+      "vix_ret_4",
+      "gold_silver_z52",
+      "copper_silver_z52"
+    ],
+    "ridge_lambda": 20.0,
+    "validation": {
+      "n": 156,
+      "model_mape_pct": 14.281,
+      "naive_mape_pct": 14.881,
+      "model_rmse_usd_oz": 2.584,
+      "naive_rmse_usd_oz": 2.672,
+      "skill_vs_naive_mse_pct": 6.489
+    }
+  },
+  "final_oos": {
+    "n": 878,
+    "model_mape_pct": 11.407,
+    "naive_mape_pct": 10.981,
+    "model_rmse_usd_oz": 5.74,
+    "naive_rmse_usd_oz": 5.709,
+    "skill_vs_naive_mse_pct": -1.084
+  },
+  "final_gate": "FAIL",
+  "live": {
+    "as_of_week": "2026-09-03",
+    "anchor_silver_usd_oz": 64.554,
+    "predicted_horizon_weeks": 13,
+    "model_fair_value_usd_oz": 66.7962,
+    "predicted_return_pct": 3.473
+  },
+  "top_validation_candidates": [
+    {
+      "horizon_weeks": 13,
+      "feature_set": "FULL",
+      "features": [
+        "silver_ret_1",
+        "silver_mom_4",
+        "silver_mom_12",
+        "gold_ret_1",
+        "gold_mom_4",
+        "gold_mom_12",
+        "copper_ret_1",
+        "copper_mom_4",
+        "dxy_ret_1",
+        "dxy_mom_4",
+        "tnx_change_1",
+        "tnx_change_4",
+        "vix_ret_1",
+        "vix_ret_4",
+        "gold_silver_z52",
+        "copper_silver_z52"
+      ],
+      "ridge_lambda": 20.0,
+      "validation": {
+        "n": 156,
+        "model_mape_pct": 14.281,
+        "naive_mape_pct": 14.881,
+        "model_rmse_usd_oz": 2.584,
+        "naive_rmse_usd_oz": 2.672,
+        "skill_vs_naive_mse_pct": 6.489
+      }
+    },
+    {
+      "horizon_weeks": 13,
+      "feature_set": "FULL",
+      "features": [
+        "silver_ret_1",
+        "silver_mom_4",
+        "silver_mom_12",
+        "gold_ret_1",
+        "gold_mom_4",
+        "gold_mom_12",
+        "copper_ret_1",
+        "copper_mom_4",
+        "dxy_ret_1",
+        "dxy_mom_4",
+        "tnx_change_1",
+        "tnx_change_4",
+        "vix_ret_1",
+        "vix_ret_4",
+        "gold_silver_z52",
+        "copper_silver_z52"
+      ],
+      "ridge_lambda": 100.0,
+      "validation": {
+        "n": 156,
+        "model_mape_pct": 14.129,
+        "naive_mape_pct": 14.881,
+        "model_rmse_usd_oz": 2.589,
+        "naive_rmse_usd_oz": 2.672,
+        "skill_vs_naive_mse_pct": 6.115
+      }
+    },
+    {
+      "horizon_weeks": 13,
+      "feature_set": "FULL",
+      "features": [
+        "silver_ret_1",
+        "silver_mom_4",
+        "silver_mom_12",
+        "gold_ret_1",
+        "gold_mom_4",
+        "gold_mom_12",
+        "copper_ret_1",
+        "copper_mom_4",
+        "dxy_ret_1",
+        "dxy_mom_4",
+        "tnx_change_1",
+        "tnx_change_4",
+        "vix_ret_1",
+        "vix_ret_4",
+        "gold_silver_z52",
+        "copper_silver_z52"
+      ],
+      "ridge_lambda": 5.0,
+      "validation": {
+        "n": 156,
+        "model_mape_pct": 14.426,
+        "naive_mape_pct": 14.881,
+        "model_rmse_usd_oz": 2.592,
+        "naive_rmse_usd_oz": 2.672,
+        "skill_vs_naive_mse_pct": 5.89
+      }
+    },
+    {
+      "horizon_weeks": 13,
+      "feature_set": "FULL",
+      "features": [
+        "silver_ret_1",
+        "silver_mom_4",
+        "silver_mom_12",
+        "gold_ret_1",
+        "gold_mom_4",
+        "gold_mom_12",
+        "copper_ret_1",
+        "copper_mom_4",
+        "dxy_ret_1",
+        "dxy_mom_4",
+        "tnx_change_1",
+        "tnx_change_4",
+        "vix_ret_1",
+        "vix_ret_4",
+        "gold_silver_z52",
+        "copper_silver_z52"
+      ],
+      "ridge_lambda": 1.0,
+      "validation": {
+        "n": 156,
+        "model_mape_pct": 14.481,
+        "naive_mape_pct": 14.881,
+        "model_rmse_usd_oz": 2.596,
+        "naive_rmse_usd_oz": 2.672,
+        "skill_vs_naive_mse_pct": 5.603
+      }
+    },
+    {
+      "horizon_weeks": 13,
+      "feature_set": "VALUATION",
+      "features": [
+        "silver_ret_1",
+        "gold_ret_1",
+        "copper_ret_1",
+        "dxy_ret_1",
+        "gold_silver_z52",
+        "copper_silver_z52"
+      ],
+      "ridge_lambda": 20.0,
+      "validation": {
+        "n": 156,
+        "model_mape_pct": 14.156,
+        "naive_mape_pct": 14.881,
+        "model_rmse_usd_oz": 2.643,
+        "naive_rmse_usd_oz": 2.672,
+        "skill_vs_naive_mse_pct": 2.161
+      }
+    },
+    {
+      "horizon_weeks": 13,
+      "feature_set": "VALUATION",
+      "features": [
+        "silver_ret_1",
+        "gold_ret_1",
+        "copper_ret_1",
+        "dxy_ret_1",
+        "gold_silver_z52",
+        "copper_silver_z52"
+      ],
+      "ridge_lambda": 5.0,
+      "validation": {
+        "n": 156,
+        "model_mape_pct": 14.154,
+        "naive_mape_pct": 14.881,
+        "model_rmse_usd_oz": 2.644,
+        "naive_rmse_usd_oz": 2.672,
+        "skill_vs_naive_mse_pct": 2.08
+      }
+    },
+    {
+      "horizon_weeks": 13,
+      "feature_set": "VALUATION",
+      "features": [
+        "silver_ret_1",
+        "gold_ret_1",
+        "copper_ret_1",
+        "dxy_ret_1",
+        "gold_silver_z52",
+        "copper_silver_z52"
+      ],
+      "ridge_lambda": 1.0,
+      "validation": {
+        "n": 156,
+        "model_mape_pct": 14.154,
+        "naive_mape_pct": 14.881,
+        "model_rmse_usd_oz": 2.645,
+        "naive_rmse_usd_oz": 2.672,
+        "skill_vs_naive_mse_pct": 2.045
+      }
+    },
+    {
+      "horizon_weeks": 13,
+      "feature_set": "VALUATION",
+      "features": [
+        "silver_ret_1",
+        "gold_ret_1",
+        "copper_ret_1",
+        "dxy_ret_1",
+        "gold_silver_z52",
+        "copper_silver_z52"
+      ],
+      "ridge_lambda": 100.0,
+      "validation": {
+        "n": 156,
+        "model_mape_pct": 14.185,
+        "naive_mape_pct": 14.881,
+        "model_rmse_usd_oz": 2.645,
+        "naive_rmse_usd_oz": 2.672,
+        "skill_vs_naive_mse_pct": 1.986
+      }
+    },
+    {
+      "horizon_weeks": 1,
+      "feature_set": "CROSS_ASSET",
+      "features": [
+        "silver_ret_1",
+        "gold_ret_1",
+        "copper_ret_1",
+        "dxy_ret_1",
+        "tnx_change_1",
+        "vix_ret_1"
+      ],
+      "ridge_lambda": 100.0,
+      "validation": {
+        "n": 156,
+        "model_mape_pct": 4.335,
+        "naive_mape_pct": 4.332,
+        "model_rmse_usd_oz": 0.786,
+        "naive_rmse_usd_oz": 0.783,
+        "skill_vs_naive_mse_pct": -0.872
+      }
+    },
+    {
+      "horizon_weeks": 4,
+      "feature_set": "VALUATION",
+      "features": [
+        "silver_ret_1",
+        "gold_ret_1",
+        "copper_ret_1",
+        "dxy_ret_1",
+        "gold_silver_z52",
+        "copper_silver_z52"
+      ],
+      "ridge_lambda": 100.0,
+      "validation": {
+        "n": 156,
+        "model_mape_pct": 8.432,
+        "naive_mape_pct": 8.389,
+        "model_rmse_usd_oz": 1.483,
+        "naive_rmse_usd_oz": 1.477,
+        "skill_vs_naive_mse_pct": -0.93
+      }
+    }
+  ],
+  "rules": {
+    "naive_benchmark": "persistence at same forecast horizon",
+    "selection_uses_final_oos": false,
+    "pass_requires_positive_mse_skill": true,
+    "pass_requires_lower_mape_than_naive": true
+  }
+}
