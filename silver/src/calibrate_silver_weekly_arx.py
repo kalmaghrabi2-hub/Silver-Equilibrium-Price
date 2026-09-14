@@ -4,7 +4,8 @@
 Target: next-week log COMEX silver close (SI=F).
 Features available at t only: lagged silver, gold, USD index, 10Y yield,
 VIX and copper. Expanding one-step-ahead walk-forward; no look-ahead and
-no missing-value imputation.
+no missing-value imputation. Publication also requires positive MSE skill
+against a persistence benchmark (next week = previous observed silver price).
 """
 from __future__ import annotations
 
@@ -27,7 +28,8 @@ MIN_TRAIN = 156
 MIN_OOS = 260
 MIN_R2 = 0.60
 MAX_MAPE = 15.0
-UA = "Mozilla/5.0 SilverEquilibriumPrice/1.0"
+MIN_SKILL_VS_NAIVE_MSE_PCT = 0.0
+UA = "Mozilla/5.0 SilverEquilibriumPrice/2.0"
 
 
 def chart(symbol: str):
@@ -119,6 +121,7 @@ def main():
         raise RuntimeError(f"Insufficient complete weekly history: {len(rows)}")
 
     predictions = []
+    naive_predictions = []
     actuals = []
     dates = []
     for i in range(MIN_TRAIN, len(rows)):
@@ -127,6 +130,7 @@ def main():
         beta = fit(x_train, [math.log(r[1]) for r in train])
         live_x = [1.0] + [(v - m) / s for v, m, s in zip(rows[i][2], means, sds)]
         predictions.append(math.exp(sum(a * b for a, b in zip(live_x, beta))))
+        naive_predictions.append(math.exp(rows[i][2][0]))
         actuals.append(rows[i][1])
         dates.append(datetime.fromtimestamp(rows[i][0] * 604800, tz=timezone.utc).date().isoformat())
 
@@ -134,21 +138,35 @@ def main():
     beta = fit(x_all, [math.log(r[1]) for r in rows])
 
     avg = statistics.fmean(actuals)
-    denom = sum((a - avg) ** 2 for a in actuals)
-    r2 = 1.0 - sum((a - p) ** 2 for a, p in zip(actuals, predictions)) / denom
+    total_ss = sum((a - avg) ** 2 for a in actuals)
+    model_sq_errors = [(a - p) ** 2 for a, p in zip(actuals, predictions)]
+    naive_sq_errors = [(a - p) ** 2 for a, p in zip(actuals, naive_predictions)]
+    model_mse = statistics.fmean(model_sq_errors)
+    naive_mse = statistics.fmean(naive_sq_errors)
+    r2 = 1.0 - sum(model_sq_errors) / total_ss
     mape = 100.0 * statistics.fmean(abs((a - p) / a) for a, p in zip(actuals, predictions))
-    rmse = math.sqrt(statistics.fmean((a - p) ** 2 for a, p in zip(actuals, predictions)))
+    naive_mape = 100.0 * statistics.fmean(abs((a - p) / a) for a, p in zip(actuals, naive_predictions))
+    rmse = math.sqrt(model_mse)
+    naive_rmse = math.sqrt(naive_mse)
+    skill_vs_naive_mse = 100.0 * (1.0 - model_mse / naive_mse) if naive_mse > 0 else float("-inf")
+
     direction_hits = 0
     direction_n = 0
-    for i in range(1, len(actuals)):
-        actual_move = actuals[i] - actuals[i - 1]
-        predicted_move = predictions[i] - actuals[i - 1]
+    for actual, predicted, baseline in zip(actuals, predictions, naive_predictions):
+        actual_move = actual - baseline
+        predicted_move = predicted - baseline
         if actual_move != 0:
             direction_n += 1
             direction_hits += int((actual_move > 0) == (predicted_move > 0))
     direction_accuracy = 100.0 * direction_hits / direction_n if direction_n else None
 
-    passed = len(predictions) >= MIN_OOS and r2 >= MIN_R2 and mape <= MAX_MAPE
+    passed = (
+        len(predictions) >= MIN_OOS
+        and r2 >= MIN_R2
+        and mape <= MAX_MAPE
+        and skill_vs_naive_mse > MIN_SKILL_VS_NAIVE_MSE_PCT
+        and mape < naive_mape
+    )
     metrics = {
         "n_weeks_total": len(rows),
         "walk_forward_n": len(predictions),
@@ -157,12 +175,15 @@ def main():
         "r2": round(r2, 4),
         "mape_pct": round(mape, 3),
         "rmse_usd_oz": round(rmse, 3),
+        "naive_mape_pct": round(naive_mape, 3),
+        "naive_rmse_usd_oz": round(naive_rmse, 3),
+        "skill_vs_naive_mse_pct": round(skill_vs_naive_mse, 3),
         "direction_accuracy_pct": None if direction_accuracy is None else round(direction_accuracy, 2),
     }
 
     output = {
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
-        "model": "silver-weekly-arx-ridge-v1",
+        "model": "silver-weekly-arx-ridge-v2",
         "frequency": "weekly",
         "target": TARGET,
         "target_source": silver_url,
@@ -180,6 +201,9 @@ def main():
             "min_oos_weeks": MIN_OOS,
             "max_mape_pct": MAX_MAPE,
             "min_r2": MIN_R2,
+            "min_skill_vs_naive_mse_pct": MIN_SKILL_VS_NAIVE_MSE_PCT,
+            "must_beat_naive_mape": True,
+            "naive_benchmark": "persistence: next weekly close equals previous observed weekly close",
             "lookahead": "none; lagged silver and predictors are from the prior observed week",
             "missing_data": "complete-case only; no imputation",
         },
