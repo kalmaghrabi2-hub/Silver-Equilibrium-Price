@@ -26,16 +26,13 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-
       - name: Compile sources
         run: python -m compileall -q silver/src
-
-      - name: Calibrate benchmark-aware weekly fair-value model
+      - name: Calibrate weekly ARX fair-value model
         shell: bash
         run: |
           for attempt in 1 2 3; do
@@ -43,16 +40,12 @@ jobs:
             if [ "$attempt" -eq 3 ]; then exit 1; fi
             sleep 15
           done
-
-      - name: Update latest silver equilibrium data
-        shell: bash
-        run: |
-          for attempt in 1 2 3; do
-            python silver/src/update_silver.py && break
-            if [ "$attempt" -eq 3 ]; then exit 1; fi
-            sleep 15
-          done
-
+      - name: Run independent strict model validation
+        run: python silver/src/strict_model_validation.py
+      - name: Update latest silver data
+        run: python silver/src/update_silver.py
+      - name: Enforce strict publication gate
+        run: python silver/src/apply_publication_gate.py
       - name: Commit refreshed outputs
         run: |
           git config user.name "silver-equilibrium-bot"
@@ -61,7 +54,7 @@ jobs:
           if git diff --cached --quiet; then
             echo "No output changes"
           else
-            git commit -m "chore(silver): daily benchmark-aware equilibrium refresh"
+            git commit -m "chore(silver): strict-governance daily refresh"
             git pull --rebase origin main
             git push origin main
           fi
