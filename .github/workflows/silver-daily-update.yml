@@ -35,7 +35,16 @@ jobs:
       - name: Compile sources
         run: python -m compileall -q silver/src
 
-      - name: Calibrate weekly ARX fair-value model
+      - name: Research validation-only weekly candidates
+        shell: bash
+        run: |
+          for attempt in 1 2; do
+            python silver/src/research_silver_weekly.py && break
+            if [ "$attempt" -eq 2 ]; then exit 1; fi
+            sleep 15
+          done
+
+      - name: Calibrate production weekly ARX fair-value model
         shell: bash
         run: |
           for attempt in 1 2 3; do
@@ -57,7 +66,7 @@ jobs:
         run: |
           git config user.name "silver-equilibrium-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add docs/silver/data/weekly_calibration.json docs/silver/data/latest.json
+          git add docs/silver/data/model_research.json docs/silver/data/weekly_calibration.json docs/silver/data/latest.json
           if git diff --cached --quiet; then
             echo "No output changes"
           else
