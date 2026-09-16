@@ -50,6 +50,8 @@ jobs:
         run: python silver/src/update_silver.py
       - name: Enforce strict publication gate
         run: python silver/src/apply_publication_gate.py
+      - name: Assert data freshness
+        run: python silver/src/assert_data_freshness.py
       - name: Assert economic committee publication contract
         run: python silver/src/assert_publication_contract.py
       - name: Commit refreshed outputs safely
