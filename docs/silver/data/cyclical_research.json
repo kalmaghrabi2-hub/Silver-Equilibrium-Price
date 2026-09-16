@@ -1,0 +1,97 @@
+{
+  "generated_at_utc": "2026-09-16T12:37:43.411267+00:00",
+  "model": "silver-cyclical-return-ridge-research-v1",
+  "status": "RESEARCH_ONLY",
+  "promotion_eligible": false,
+  "promotion_blocker": "Historical FRED CSV is current-vintage. ALFRED point-in-time vintages or a sufficiently long committed forward archive are required before publication promotion.",
+  "data_sources": {
+    "target": "https://query1.finance.yahoo.com/v8/finance/chart/SI%3DF?period1=946684800&period2=1789562236&interval=1wk&events=history&includeAdjustedClose=true",
+    "GC=F": "https://query1.finance.yahoo.com/v8/finance/chart/GC%3DF?period1=946684800&period2=1789562236&interval=1wk&events=history&includeAdjustedClose=true",
+    "HG=F": "https://query1.finance.yahoo.com/v8/finance/chart/HG%3DF?period1=946684800&period2=1789562236&interval=1wk&events=history&includeAdjustedClose=true",
+    "DFII10": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DFII10",
+    "DTWEXBGS": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DTWEXBGS",
+    "VIXCLS": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=VIXCLS",
+    "T10YIE": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=T10YIE"
+  },
+  "selected": {
+    "features": [
+      "RET1",
+      "RET4",
+      "GOLD_RET1",
+      "COPPER_RET1",
+      "D_DFII10",
+      "D_DTWEXBGS",
+      "D_VIXCLS",
+      "D_T10YIE"
+    ],
+    "ridge_lambda": 0.5,
+    "model_weight": 0.5,
+    "validation_metrics": {
+      "mse": 0.819011473550463,
+      "naive_mse": 0.8219166789079235,
+      "mape_pct": 2.892738557276637,
+      "naive_mape_pct": 2.91486736991565,
+      "mse_skill_pct": 0.3534671374865739,
+      "relative_mape_improvement_pct": 0.7591704812165673,
+      "direction_accuracy_pct": 53.205128205128204
+    }
+  },
+  "final_oos": {
+    "start": "2021-10-04",
+    "end": "2026-09-16",
+    "n": 260,
+    "mse": 7.722572565107118,
+    "naive_mse": 7.666028206135091,
+    "mape_pct": 3.723730452702103,
+    "naive_mape_pct": 3.7121180493677794,
+    "mse_skill_pct": -0.7375965421934527,
+    "relative_mape_improvement_pct": -0.3128241930857078,
+    "direction_accuracy_pct": 48.07692307692308,
+    "dm_stat": -0.882198413042217,
+    "dm_one_sided_p_value": 0.8111652400038368,
+    "positive_52w_windows": 0,
+    "windows": [
+      {
+        "window": 1,
+        "mse_skill_pct": -1.778416944120087,
+        "positive": false
+      },
+      {
+        "window": 2,
+        "mse_skill_pct": -0.3141557976847231,
+        "positive": false
+      },
+      {
+        "window": 3,
+        "mse_skill_pct": -0.3254685499237686,
+        "positive": false
+      },
+      {
+        "window": 4,
+        "mse_skill_pct": -0.6839199702508791,
+        "positive": false
+      },
+      {
+        "window": 5,
+        "mse_skill_pct": -0.7434595682326073,
+        "positive": false
+      }
+    ],
+    "checks": {
+      "nonzero_model_weight": true,
+      "min_mse_skill": false,
+      "min_relative_mape_improvement": false,
+      "dm_significance": false,
+      "regime_stability": false,
+      "directional_information": false
+    },
+    "statistical_gate": "FAIL"
+  },
+  "policy": {
+    "final_oos_untouched": true,
+    "selection_window_weeks": 156,
+    "final_oos_weeks": 260,
+    "no_price_clipping": true,
+    "current_published_price_unchanged": true
+  }
+}
