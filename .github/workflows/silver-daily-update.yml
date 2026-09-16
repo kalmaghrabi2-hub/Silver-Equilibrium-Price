@@ -34,6 +34,8 @@ jobs:
         run: python -m compileall -q silver/src
       - name: Collect institutional point-in-time inputs
         run: python silver/src/collect_institutional_inputs.py
+      - name: Research cyclical fair-value candidates
+        run: python silver/src/research_cyclical_model.py
       - name: Calibrate weekly ARX fair-value model
         shell: bash
         run: |
@@ -54,7 +56,7 @@ jobs:
         run: |
           git config user.name "silver-equilibrium-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add docs/silver/data/weekly_calibration.json docs/silver/data/latest.json docs/silver/data/institutional_inputs.json
+          git add docs/silver/data/weekly_calibration.json docs/silver/data/latest.json docs/silver/data/institutional_inputs.json docs/silver/data/cyclical_research.json
           if git diff --cached --quiet; then
             echo "No output changes"
           else
