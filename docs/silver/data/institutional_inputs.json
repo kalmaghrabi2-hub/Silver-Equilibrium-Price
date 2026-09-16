@@ -1,0 +1,54 @@
+{
+  "generated_at_utc": "2026-09-16T11:05:36.621055+00:00",
+  "status": "PASS",
+  "purpose": "institutional research inputs; not authorized to change published equilibrium/reference price",
+  "point_in_time_policy": {
+    "forecast_use": "only observations available before forecast week may be used",
+    "release_lag": "monthly/annual series require explicit publication-lag mapping before backtest use",
+    "retroactive_revision_policy": "do not treat later revisions as historically known",
+    "archive_policy": "daily committed snapshots establish forward point-in-time evidence from activation date"
+  },
+  "observations": {
+    "real_yield_10y": {
+      "id": "DFII10",
+      "source": "Federal Reserve/FRED",
+      "role": "precious-metals real-yield channel",
+      "observation_date": "2026-09-14",
+      "value": 2.6,
+      "url": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DFII10"
+    },
+    "broad_usd": {
+      "id": "DTWEXBGS",
+      "source": "Federal Reserve/FRED",
+      "role": "broad USD valuation channel",
+      "observation_date": "2026-09-11",
+      "value": 118.2126,
+      "url": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DTWEXBGS"
+    },
+    "vix": {
+      "id": "VIXCLS",
+      "source": "CBOE via FRED",
+      "role": "risk regime",
+      "observation_date": "2026-09-14",
+      "value": 17.1,
+      "url": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=VIXCLS"
+    },
+    "breakeven_10y": {
+      "id": "T10YIE",
+      "source": "FRED",
+      "role": "inflation expectations",
+      "observation_date": "2026-09-15",
+      "value": 2.38,
+      "url": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=T10YIE"
+    },
+    "industrial_production": {
+      "id": "INDPRO",
+      "source": "Federal Reserve/FRED",
+      "role": "industrial-cycle context; release-lag control required",
+      "observation_date": "2026-07-01",
+      "value": 102.9939,
+      "url": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=INDPRO"
+    }
+  },
+  "errors": {}
+}
