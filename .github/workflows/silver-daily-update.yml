@@ -32,6 +32,8 @@ jobs:
           python-version: "3.12"
       - name: Compile sources
         run: python -m compileall -q silver/src
+      - name: Collect institutional point-in-time inputs
+        run: python silver/src/collect_institutional_inputs.py
       - name: Calibrate weekly ARX fair-value model
         shell: bash
         run: |
@@ -52,7 +54,7 @@ jobs:
         run: |
           git config user.name "silver-equilibrium-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add docs/silver/data/weekly_calibration.json docs/silver/data/latest.json
+          git add docs/silver/data/weekly_calibration.json docs/silver/data/latest.json docs/silver/data/institutional_inputs.json
           if git diff --cached --quiet; then
             echo "No output changes"
           else
