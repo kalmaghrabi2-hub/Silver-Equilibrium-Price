@@ -52,15 +52,25 @@ jobs:
         run: python silver/src/apply_publication_gate.py
       - name: Assert economic committee publication contract
         run: python silver/src/assert_publication_contract.py
-      - name: Commit refreshed outputs
+      - name: Commit refreshed outputs safely
+        shell: bash
         run: |
+          set -euo pipefail
           git config user.name "silver-equilibrium-bot"
           git config user.email "actions@users.noreply.github.com"
+          mkdir -p /tmp/silver-generated
+          cp docs/silver/data/weekly_calibration.json /tmp/silver-generated/
+          cp docs/silver/data/latest.json /tmp/silver-generated/
+          cp docs/silver/data/institutional_inputs.json /tmp/silver-generated/
+          cp docs/silver/data/cyclical_research.json /tmp/silver-generated/
+          git fetch origin main
+          git reset --hard origin/main
+          mkdir -p docs/silver/data
+          cp /tmp/silver-generated/*.json docs/silver/data/
           git add docs/silver/data/weekly_calibration.json docs/silver/data/latest.json docs/silver/data/institutional_inputs.json docs/silver/data/cyclical_research.json
           if git diff --cached --quiet; then
             echo "No output changes"
           else
             git commit -m "chore(silver): strict-governance daily refresh"
-            git pull --rebase origin main
-            git push origin main
+            git push origin HEAD:main
           fi
