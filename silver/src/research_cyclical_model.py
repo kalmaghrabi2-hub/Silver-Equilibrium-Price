@@ -15,7 +15,7 @@ FEATURE_SETS = [
     ["RET1", "RET4", "GOLD_RET1", "COPPER_RET1", "DFII10", "DTWEXBGS", "VIXCLS", "T10YIE", "D_DFII10", "D_DTWEXBGS"],
 ]
 LAMBDAS = [0.5, 2.0, 10.0, 50.0]
-WEIGHTS = [0.25, 0.50, 0.75, 1.0]
+WEIGHTS = [0.0, 0.25, 0.50, 0.75, 1.0]
 MIN_TRAIN, VALIDATION_WEEKS, FINAL_OOS_WEEKS = 156, 156, 260
 UA = "Mozilla/5.0 SilverCyclicalResearch/1.0"
 
@@ -188,7 +188,7 @@ def main():
         windows.append({"window": k + 1, "mse_skill_pct": mm["mse_skill_pct"], "positive": mm["mse_skill_pct"] > 0})
     checks = {"nonzero_model_weight": weight > 0, "min_mse_skill": m["mse_skill_pct"] >= 2.0, "min_relative_mape_improvement": m["relative_mape_improvement_pct"] >= 1.0, "dm_significance": dm_p <= 0.05, "regime_stability": sum(x["positive"] for x in windows) >= 4, "directional_information": m["direction_accuracy_pct"] >= 52.5}
     statistical_pass = all(checks.values())
-    payload = {"generated_at_utc": datetime.now(timezone.utc).isoformat(), "model": "silver-cyclical-return-ridge-research-v1", "status": "RESEARCH_ONLY", "promotion_eligible": False, "promotion_blocker": "Historical FRED CSV is current-vintage. ALFRED point-in-time vintages or a sufficiently long committed forward archive are required before publication promotion.", "data_sources": sources, "selected": {"features": features, "ridge_lambda": lam, "model_weight": weight, "validation_metrics": validation_metrics}, "final_oos": {"start": dates[0], "end": dates[-1], "n": len(pred), **m, "dm_stat": dm_stat, "dm_one_sided_p_value": dm_p, "positive_52w_windows": sum(x["positive"] for x in windows), "windows": windows, "checks": checks, "statistical_gate": "PASS" if statistical_pass else "FAIL"}, "policy": {"final_oos_untouched": True, "selection_window_weeks": VALIDATION_WEEKS, "final_oos_weeks": FINAL_OOS_WEEKS, "no_price_clipping": True, "current_published_price_unchanged": True}}
+    payload = {"generated_at_utc": datetime.now(timezone.utc).isoformat(), "model": "silver-cyclical-return-ridge-research-v1.1", "status": "RESEARCH_ONLY", "promotion_eligible": False, "promotion_blocker": "Historical FRED CSV is current-vintage. ALFRED point-in-time vintages or a sufficiently long committed forward archive are required before publication promotion.", "data_sources": sources, "selected": {"features": features, "ridge_lambda": lam, "model_weight": weight, "validation_metrics": validation_metrics}, "final_oos": {"start": dates[0], "end": dates[-1], "n": len(pred), **m, "fit_score_100_minus_mape_pct": 100-m["mape_pct"], "naive_fit_score_100_minus_mape_pct": 100-m["naive_mape_pct"], "dm_stat": dm_stat, "dm_one_sided_p_value": dm_p, "positive_52w_windows": sum(x["positive"] for x in windows), "windows": windows, "checks": checks, "statistical_gate": "PASS" if statistical_pass else "FAIL"}, "policy": {"final_oos_untouched": True, "selection_window_weeks": VALIDATION_WEEKS, "final_oos_weeks": FINAL_OOS_WEEKS, "no_price_clipping": True, "current_published_price_unchanged": True, "zero_weight_candidate_allowed": True}}
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(payload, ensure_ascii=False, indent=2))
