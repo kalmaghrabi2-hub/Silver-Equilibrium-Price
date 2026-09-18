@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-09-17T23:38:25.958922+00:00",
+  "generated_at_utc": "2026-09-18T23:32:59.233133+00:00",
   "status": "PASS",
   "purpose": "institutional research inputs; not authorized to change published equilibrium/reference price",
   "point_in_time_policy": {
@@ -13,8 +13,8 @@
       "id": "DFII10",
       "source": "Federal Reserve/FRED",
       "role": "precious-metals real-yield channel",
-      "observation_date": "2026-09-16",
-      "value": 2.68,
+      "observation_date": "2026-09-17",
+      "value": 2.61,
       "url": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DFII10"
     },
     "broad_usd": {
@@ -29,15 +29,15 @@
       "id": "VIXCLS",
       "source": "CBOE via FRED",
       "role": "risk regime",
-      "observation_date": "2026-09-16",
-      "value": 17.71,
+      "observation_date": "2026-09-17",
+      "value": 15.44,
       "url": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=VIXCLS"
     },
     "breakeven_10y": {
       "id": "T10YIE",
       "source": "FRED",
       "role": "inflation expectations",
-      "observation_date": "2026-09-17",
+      "observation_date": "2026-09-18",
       "value": 2.33,
       "url": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=T10YIE"
     },
@@ -45,8 +45,8 @@
       "id": "INDPRO",
       "source": "Federal Reserve/FRED",
       "role": "industrial-cycle context; release-lag control required",
-      "observation_date": "2026-07-01",
-      "value": 102.9939,
+      "observation_date": "2026-08-01",
+      "value": 103.0682,
       "url": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=INDPRO"
     }
   },
