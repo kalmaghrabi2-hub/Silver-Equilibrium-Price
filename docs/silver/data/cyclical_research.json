@@ -1,13 +1,13 @@
 {
-  "generated_at_utc": "2026-09-30T00:44:35.548516+00:00",
+  "generated_at_utc": "2026-10-01T00:48:14.231710+00:00",
   "model": "silver-cyclical-return-ridge-research-v1.1",
   "status": "RESEARCH_ONLY",
   "promotion_eligible": false,
   "promotion_blocker": "Historical FRED CSV is current-vintage. ALFRED point-in-time vintages or a sufficiently long committed forward archive are required before publication promotion.",
   "data_sources": {
-    "target": "https://query1.finance.yahoo.com/v8/finance/chart/SI%3DF?period1=946684800&period2=1790729048&interval=1wk&events=history&includeAdjustedClose=true",
-    "GC=F": "https://query1.finance.yahoo.com/v8/finance/chart/GC%3DF?period1=946684800&period2=1790729048&interval=1wk&events=history&includeAdjustedClose=true",
-    "HG=F": "https://query1.finance.yahoo.com/v8/finance/chart/HG%3DF?period1=946684800&period2=1790729048&interval=1wk&events=history&includeAdjustedClose=true",
+    "target": "https://query1.finance.yahoo.com/v8/finance/chart/SI%3DF?period1=946684800&period2=1790815672&interval=1wk&events=history&includeAdjustedClose=true",
+    "GC=F": "https://query1.finance.yahoo.com/v8/finance/chart/GC%3DF?period1=946684800&period2=1790815673&interval=1wk&events=history&includeAdjustedClose=true",
+    "HG=F": "https://query1.finance.yahoo.com/v8/finance/chart/HG%3DF?period1=946684800&period2=1790815673&interval=1wk&events=history&includeAdjustedClose=true",
     "DFII10": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DFII10",
     "DTWEXBGS": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DTWEXBGS",
     "VIXCLS": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=VIXCLS",
@@ -38,19 +38,19 @@
   },
   "final_oos": {
     "start": "2021-10-18",
-    "end": "2026-09-30",
+    "end": "2026-10-01",
     "n": 260,
-    "mse": 7.774670638566715,
-    "naive_mse": 7.715863124195535,
-    "mape_pct": 3.740184239008842,
-    "naive_mape_pct": 3.7271004976022417,
-    "mse_skill_pct": -0.7621637842015305,
-    "relative_mape_improvement_pct": -0.35104342947063655,
-    "direction_accuracy_pct": 48.07692307692308,
-    "fit_score_100_minus_mape_pct": 96.25981576099116,
-    "naive_fit_score_100_minus_mape_pct": 96.27289950239776,
-    "dm_stat": -0.9182768552933903,
-    "dm_one_sided_p_value": 0.8207630294366157,
+    "mse": 7.788769401521614,
+    "naive_mse": 7.729096285952367,
+    "mape_pct": 3.7440793512587183,
+    "naive_mape_pct": 3.7293761214097674,
+    "mse_skill_pct": -0.772058121176511,
+    "relative_mape_improvement_pct": -0.39425441066514966,
+    "direction_accuracy_pct": 47.69230769230769,
+    "fit_score_100_minus_mape_pct": 96.25592064874128,
+    "naive_fit_score_100_minus_mape_pct": 96.27062387859023,
+    "dm_stat": -0.9317559447644737,
+    "dm_one_sided_p_value": 0.8242686664930132,
     "positive_52w_windows": 1,
     "windows": [
       {
@@ -75,7 +75,7 @@
       },
       {
         "window": 5,
-        "mse_skill_pct": -0.754224906590184,
+        "mse_skill_pct": -0.7655869057381803,
         "positive": false
       }
     ],
