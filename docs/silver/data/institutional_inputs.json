@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-10-07T00:59:32.231154+00:00",
+  "generated_at_utc": "2026-10-08T01:15:25.039337+00:00",
   "status": "PASS",
   "purpose": "institutional research inputs; not authorized to change published equilibrium/reference price",
   "point_in_time_policy": {
@@ -13,8 +13,8 @@
       "id": "DFII10",
       "source": "Federal Reserve/FRED",
       "role": "precious-metals real-yield channel",
-      "observation_date": "2026-10-05",
-      "value": 2.95,
+      "observation_date": "2026-10-06",
+      "value": 2.91,
       "url": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DFII10"
     },
     "broad_usd": {
@@ -29,15 +29,15 @@
       "id": "VIXCLS",
       "source": "CBOE via FRED",
       "role": "risk regime",
-      "observation_date": "2026-10-05",
-      "value": 15.52,
+      "observation_date": "2026-10-06",
+      "value": 15.01,
       "url": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=VIXCLS"
     },
     "breakeven_10y": {
       "id": "T10YIE",
       "source": "FRED",
       "role": "inflation expectations",
-      "observation_date": "2026-10-06",
+      "observation_date": "2026-10-07",
       "value": 2.36,
       "url": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=T10YIE"
     },
