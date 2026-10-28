@@ -1,13 +1,13 @@
 {
-  "generated_at_utc": "2026-10-27T00:45:40.442774+00:00",
+  "generated_at_utc": "2026-10-28T00:42:32.464761+00:00",
   "model": "silver-cyclical-return-ridge-research-v1.1",
   "status": "RESEARCH_ONLY",
   "promotion_eligible": false,
   "promotion_blocker": "Historical FRED CSV is current-vintage. ALFRED point-in-time vintages or a sufficiently long committed forward archive are required before publication promotion.",
   "data_sources": {
-    "target": "https://query1.finance.yahoo.com/v8/finance/chart/SI%3DF?period1=946684800&period2=1793061913&interval=1wk&events=history&includeAdjustedClose=true",
-    "GC=F": "https://query1.finance.yahoo.com/v8/finance/chart/GC%3DF?period1=946684800&period2=1793061913&interval=1wk&events=history&includeAdjustedClose=true",
-    "HG=F": "https://query1.finance.yahoo.com/v8/finance/chart/HG%3DF?period1=946684800&period2=1793061913&interval=1wk&events=history&includeAdjustedClose=true",
+    "target": "https://query1.finance.yahoo.com/v8/finance/chart/SI%3DF?period1=946684800&period2=1793148124&interval=1wk&events=history&includeAdjustedClose=true",
+    "GC=F": "https://query1.finance.yahoo.com/v8/finance/chart/GC%3DF?period1=946684800&period2=1793148124&interval=1wk&events=history&includeAdjustedClose=true",
+    "HG=F": "https://query1.finance.yahoo.com/v8/finance/chart/HG%3DF?period1=946684800&period2=1793148124&interval=1wk&events=history&includeAdjustedClose=true",
     "DFII10": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DFII10",
     "DTWEXBGS": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DTWEXBGS",
     "VIXCLS": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=VIXCLS",
@@ -27,55 +27,55 @@
     "ridge_lambda": 0.5,
     "model_weight": 0.75,
     "validation_metrics": {
-      "mse": 0.8247406991352315,
-      "naive_mse": 0.8319531223686832,
-      "mape_pct": 2.9114802931302695,
-      "naive_mape_pct": 2.9508953486429625,
-      "mse_skill_pct": 0.8669266379957796,
-      "relative_mape_improvement_pct": 1.3356981815983076,
+      "mse": 0.8356816430543059,
+      "naive_mse": 0.84064438900771,
+      "mape_pct": 2.9308708802162657,
+      "naive_mape_pct": 2.969659877054461,
+      "mse_skill_pct": 0.5903502144660733,
+      "relative_mape_improvement_pct": 1.3061764122519413,
       "direction_accuracy_pct": 54.48717948717949
     }
   },
   "final_oos": {
-    "start": "2021-11-08",
-    "end": "2026-10-27",
+    "start": "2021-11-15",
+    "end": "2026-10-28",
     "n": 260,
-    "mse": 7.947676965191155,
-    "naive_mse": 7.8392721666758005,
-    "mape_pct": 3.7916619968137963,
-    "naive_mape_pct": 3.757875813329564,
-    "mse_skill_pct": -1.3828426441956587,
-    "relative_mape_improvement_pct": -0.8990766369763831,
-    "direction_accuracy_pct": 47.30769230769231,
-    "fit_score_100_minus_mape_pct": 96.2083380031862,
-    "naive_fit_score_100_minus_mape_pct": 96.24212418667044,
-    "dm_stat": -1.1192828285103948,
-    "dm_one_sided_p_value": 0.8684902504667709,
+    "mse": 7.940672824623091,
+    "naive_mse": 7.834705586841399,
+    "mape_pct": 3.7711712883669626,
+    "naive_mape_pct": 3.743532347413957,
+    "mse_skill_pct": -1.3525363092094622,
+    "relative_mape_improvement_pct": -0.7383117972013478,
+    "direction_accuracy_pct": 47.69230769230769,
+    "fit_score_100_minus_mape_pct": 96.22882871163304,
+    "naive_fit_score_100_minus_mape_pct": 96.25646765258604,
+    "dm_stat": -1.0951140660659848,
+    "dm_one_sided_p_value": 0.8632666664761757,
     "positive_52w_windows": 1,
     "windows": [
       {
         "window": 1,
-        "mse_skill_pct": -1.3562064009993158,
+        "mse_skill_pct": -0.9727964454853355,
         "positive": false
       },
       {
         "window": 2,
-        "mse_skill_pct": -5.143806937360362,
+        "mse_skill_pct": -4.580773959617557,
         "positive": false
       },
       {
         "window": 3,
-        "mse_skill_pct": 0.9196818666516116,
+        "mse_skill_pct": 0.7220986630042336,
         "positive": true
       },
       {
         "window": 4,
-        "mse_skill_pct": -2.310169423814612,
+        "mse_skill_pct": -2.223698313972289,
         "positive": false
       },
       {
         "window": 5,
-        "mse_skill_pct": -1.3351304767475147,
+        "mse_skill_pct": -1.3210009727829375,
         "positive": false
       }
     ],
