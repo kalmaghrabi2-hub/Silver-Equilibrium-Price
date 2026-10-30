@@ -1,10 +1,10 @@
 {
-  "generated_at_utc": "2026-10-29T01:12:18.440828+00:00",
+  "generated_at_utc": "2026-10-30T01:19:14.593389+00:00",
   "model": "silver-weekly-benchmark-aware-ridge-v3",
   "frequency": "weekly",
   "forecast_horizon_weeks": 1,
   "target": "SI=F",
-  "target_source": "https://query1.finance.yahoo.com/v8/finance/chart/SI%3DF?period1=946684800&period2=1793236319&interval=1wk&events=history&includeAdjustedClose=true",
+  "target_source": "https://query1.finance.yahoo.com/v8/finance/chart/SI%3DF?period1=946684800&period2=1793323143&interval=1wk&events=history&includeAdjustedClose=true",
   "series": [
     "LAG_SILVER_LOG",
     "GC=F",
@@ -14,37 +14,37 @@
     "HG=F"
   ],
   "predictor_sources": {
-    "LAG_SILVER_LOG": "https://query1.finance.yahoo.com/v8/finance/chart/SI%3DF?period1=946684800&period2=1793236319&interval=1wk&events=history&includeAdjustedClose=true",
-    "GC=F": "https://query1.finance.yahoo.com/v8/finance/chart/GC%3DF?period1=946684800&period2=1793236319&interval=1wk&events=history&includeAdjustedClose=true",
-    "DX-Y.NYB": "https://query1.finance.yahoo.com/v8/finance/chart/DX-Y.NYB?period1=946684800&period2=1793236319&interval=1wk&events=history&includeAdjustedClose=true",
-    "^TNX": "https://query1.finance.yahoo.com/v8/finance/chart/%5ETNX?period1=946684800&period2=1793236319&interval=1wk&events=history&includeAdjustedClose=true",
-    "^VIX": "https://query1.finance.yahoo.com/v8/finance/chart/%5EVIX?period1=946684800&period2=1793236320&interval=1wk&events=history&includeAdjustedClose=true",
-    "HG=F": "https://query1.finance.yahoo.com/v8/finance/chart/HG%3DF?period1=946684800&period2=1793236320&interval=1wk&events=history&includeAdjustedClose=true"
+    "LAG_SILVER_LOG": "https://query1.finance.yahoo.com/v8/finance/chart/SI%3DF?period1=946684800&period2=1793323143&interval=1wk&events=history&includeAdjustedClose=true",
+    "GC=F": "https://query1.finance.yahoo.com/v8/finance/chart/GC%3DF?period1=946684800&period2=1793323144&interval=1wk&events=history&includeAdjustedClose=true",
+    "DX-Y.NYB": "https://query1.finance.yahoo.com/v8/finance/chart/DX-Y.NYB?period1=946684800&period2=1793323144&interval=1wk&events=history&includeAdjustedClose=true",
+    "^TNX": "https://query1.finance.yahoo.com/v8/finance/chart/%5ETNX?period1=946684800&period2=1793323144&interval=1wk&events=history&includeAdjustedClose=true",
+    "^VIX": "https://query1.finance.yahoo.com/v8/finance/chart/%5EVIX?period1=946684800&period2=1793323144&interval=1wk&events=history&includeAdjustedClose=true",
+    "HG=F": "https://query1.finance.yahoo.com/v8/finance/chart/HG%3DF?period1=946684800&period2=1793323145&interval=1wk&events=history&includeAdjustedClose=true"
   },
   "beta": [
-    2.766863524847003,
-    0.6378134055571356,
-    0.017316992284839277,
-    -0.005427730844904471,
-    -0.006036608019546327,
-    -0.0006208134013711126,
-    0.012241133013253433
+    2.7677090717711286,
+    0.6388095132104091,
+    0.01711091138027968,
+    -0.00540044290720118,
+    -0.006037414337794724,
+    -0.0006271789155447146,
+    0.011910877483074666
   ],
   "means": [
-    2.765116889197382,
-    1354.0958235855942,
-    92.72310626690205,
-    3.2777318644872953,
-    19.51931867215223,
-    2.9441560426037827
+    2.7660054402346566,
+    1356.0705704919417,
+    92.73003664477503,
+    3.2790256186687055,
+    19.517408482675844,
+    2.946862736566873
   ],
   "sds": [
-    0.6704248474105373,
-    921.6491920412685,
-    11.065856034616584,
-    1.2218555403218752,
-    8.30817284148356,
-    1.2941614066708624
+    0.6709829612102619,
+    924.1960717338065,
+    11.064767837943133,
+    1.222343150106883,
+    8.305431073883039,
+    1.2975468770119252
   ],
   "ridge_lambda": 2.0,
   "blend_weight_vs_persistence": 0.25,
@@ -67,42 +67,42 @@
     ],
     "selected_validation_metrics": {
       "n": 156,
-      "r2": 0.9629,
-      "mape_pct": 2.931,
-      "accuracy_pct": 97.069,
-      "rmse_usd_oz": 0.911,
-      "naive_mape_pct": 2.951,
-      "naive_accuracy_pct": 97.049,
-      "naive_rmse_usd_oz": 0.912,
-      "skill_vs_naive_mse_pct": 0.219,
+      "r2": 0.9624,
+      "mape_pct": 2.949,
+      "accuracy_pct": 97.051,
+      "rmse_usd_oz": 0.915,
+      "naive_mape_pct": 2.97,
+      "naive_accuracy_pct": 97.03,
+      "naive_rmse_usd_oz": 0.917,
+      "skill_vs_naive_mse_pct": 0.401,
       "direction_accuracy_pct": 56.41
     }
   },
   "metrics": {
     "n": 260,
     "r2": 0.9765,
-    "mape_pct": 3.769,
-    "accuracy_pct": 96.231,
-    "rmse_usd_oz": 2.815,
-    "naive_mape_pct": 3.76,
-    "naive_accuracy_pct": 96.24,
-    "naive_rmse_usd_oz": 2.8,
-    "skill_vs_naive_mse_pct": -1.096,
-    "direction_accuracy_pct": 49.23,
-    "n_weeks_total": 1365,
+    "mape_pct": 3.77,
+    "accuracy_pct": 96.23,
+    "rmse_usd_oz": 2.818,
+    "naive_mape_pct": 3.756,
+    "naive_accuracy_pct": 96.244,
+    "naive_rmse_usd_oz": 2.802,
+    "skill_vs_naive_mse_pct": -1.167,
+    "direction_accuracy_pct": 48.46,
+    "n_weeks_total": 1366,
     "walk_forward_n": 260,
-    "walk_forward_start": "2021-11-04",
-    "walk_forward_end": "2026-10-22"
+    "walk_forward_start": "2021-11-11",
+    "walk_forward_end": "2026-10-29"
   },
   "walk_forward_gate": "PASS",
   "benchmark_gate": "FAIL",
   "publication_status": "REFERENCE_ONLY",
   "live": {
-    "as_of_week": "2026-10-22",
-    "anchor_usd_oz": 54.293,
-    "raw_model_fair_value_usd_oz": 55.0921,
-    "fair_value_usd_oz": 54.4928,
-    "predicted_return_pct": 0.368
+    "as_of_week": "2026-10-29",
+    "anchor_usd_oz": 51.285,
+    "raw_model_fair_value_usd_oz": 52.0675,
+    "fair_value_usd_oz": 51.4806,
+    "predicted_return_pct": 0.381
   },
   "rules": {
     "min_training_weeks": 156,
@@ -120,7 +120,7 @@
     "equilibrium_claim_rule": "Near-term forecast cannot by itself validate structural equilibrium; every structural/physical overlay needs separate OOS validation."
   },
   "strict_validation": {
-    "generated_at_utc": "2026-10-29T01:12:22.470287+00:00",
+    "generated_at_utc": "2026-10-30T01:19:17.811373+00:00",
     "checks": {
       "nonzero_model_weight": true,
       "min_mse_skill": false,
@@ -144,41 +144,41 @@
       "min_direction_accuracy_pct": 52.5
     },
     "diagnostics": {
-      "mse_skill_pct": -1.096,
-      "relative_mape_improvement_pct": -0.217,
-      "direction_accuracy_pct": 49.23,
-      "dm_stat": -0.6494,
-      "dm_one_sided_p_value": 0.741959,
+      "mse_skill_pct": -1.166,
+      "relative_mape_improvement_pct": -0.37,
+      "direction_accuracy_pct": 48.46,
+      "dm_stat": -0.6907,
+      "dm_one_sided_p_value": 0.75512,
       "positive_52w_windows": 2,
       "windows": [
         {
-          "start": "2021-11-04",
-          "end": "2022-10-27",
-          "skill_mse_pct": -1.305,
+          "start": "2021-11-11",
+          "end": "2022-11-03",
+          "skill_mse_pct": -2.112,
           "positive": false
         },
         {
-          "start": "2022-11-03",
-          "end": "2023-10-26",
-          "skill_mse_pct": -0.945,
+          "start": "2022-11-10",
+          "end": "2023-11-02",
+          "skill_mse_pct": -0.595,
           "positive": false
         },
         {
-          "start": "2023-11-02",
-          "end": "2024-10-24",
-          "skill_mse_pct": 1.252,
+          "start": "2023-11-09",
+          "end": "2024-10-31",
+          "skill_mse_pct": 0.903,
           "positive": true
         },
         {
-          "start": "2024-10-31",
-          "end": "2025-10-23",
-          "skill_mse_pct": 2.412,
+          "start": "2024-11-07",
+          "end": "2025-10-30",
+          "skill_mse_pct": 2.587,
           "positive": true
         },
         {
-          "start": "2025-10-30",
-          "end": "2026-10-22",
-          "skill_mse_pct": -1.407,
+          "start": "2025-11-06",
+          "end": "2026-10-29",
+          "skill_mse_pct": -1.467,
           "positive": false
         }
       ]
@@ -188,20 +188,20 @@
   "uncertainty": {
     "method": "empirical final-OOS log errors",
     "candidate_80": [
-      51.4926,
-      57.9547
+      48.6462,
+      54.7512
     ],
     "candidate_95": [
-      49.2354,
-      60.0423
+      46.5138,
+      56.7233
     ],
     "persistence_80": [
-      51.3942,
-      57.8329
+      48.5468,
+      54.6288
     ],
     "persistence_95": [
-      49.29,
-      59.9662
+      46.5592,
+      56.6439
     ]
   }
 }
